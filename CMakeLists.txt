@@ -19,11 +19,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Files
 
 file(GLOB_RECURSE SRCS src/*.cpp)
-file(GLOB_RECURSE HEADERS src/*.h)
+file(GLOB_RECURSE HEADERS include/*.h)
 
 # Search directories
 
-include_directories(src/)
+include_directories(include)
 
 # Executable
 
