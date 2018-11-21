@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.1)
 
-project(Fortune)
+project(MyGAL)
 
 # Compiler 
 
@@ -27,18 +27,10 @@ include_directories(src/)
 
 # Executable
 
-set(EXECUTABLE_NAME "Fortune")
+set(EXECUTABLE_NAME "MyGAL")
 add_executable(${EXECUTABLE_NAME} ${SRCS} ${HEADERS})
 
 # Libraries
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
-
-find_package(SFML 2.4 REQUIRED network audio graphics window system)
-if(SFML_FOUND)
-    include_directories(${SFML_INCLUDE_DIR})
-    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
-else()
-    message(FATAL_ERROR "SFML not found")
-endif()
 
