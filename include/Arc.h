@@ -1,4 +1,4 @@
-/* MyGAL
+/* FortuneAlgorithm
  * Copyright (C) 2018 Pierre Vigier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,24 +20,26 @@
 // My includes
 #include "VoronoiDiagram.h"
 
+template<typename T>
 class Event;
 
+template<typename T>
 struct Arc
 {
     enum class Color{RED, BLACK};
 
     // Hierarchy
-    Arc* parent;
-    Arc* left;
-    Arc* right;
+    Arc<T>* parent;
+    Arc<T>* left;
+    Arc<T>* right;
     // Diagram
-    VoronoiDiagram::Site* site;
-    VoronoiDiagram::HalfEdge* leftHalfEdge;
-    VoronoiDiagram::HalfEdge* rightHalfEdge;
-    Event* event;
+    typename VoronoiDiagram<T>::Site* site;
+    typename VoronoiDiagram<T>::HalfEdge* leftHalfEdge;
+    typename VoronoiDiagram<T>::HalfEdge* rightHalfEdge;
+    Event<T>* event;
     // Optimizations
-    Arc* prev;
-    Arc* next;
+    Arc<T>* prev;
+    Arc<T>* next;
     // Only for balancing
     Color color;
 };

@@ -1,4 +1,4 @@
-/* MyGAL
+/* FortuneAlgorithm
  * Copyright (C) 2018 Pierre Vigier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,29 +21,53 @@
 #include "Vector2.h"
 #include "VoronoiDiagram.h"
 
+template<typename T>
 class Arc;
 
+template<typename T>
 class Event
 {
 public:
     enum class Type{SITE, CIRCLE};
 
     // Site event
-    Event(VoronoiDiagram::Site* site);
+    Event(VoronoiDiagram<T>::Site* site) : type(Type::SITE), y(site->point.y), index(-1), site(site)
+    {
+
+    }
+
     // Circle event
-    Event(double y, Vector2 point, Arc* arc);
+    Event(T y, Vector2<T> point, Arc<T>* arc) : type(Type::CIRCLE), y(y), index(-1), point(point), arc(arc)
+    {
+
+
+    }
+
 
     const Type type;
-    double y;
+    T y;
     int index;
     // Site event
-    VoronoiDiagram::Site* site;
+    VoronoiDiagram<T>::Site* site;
     // Circle event
-    Vector2 point;
-    Arc* arc;
+    Vector2<T> point;
+    Arc<T>* arc;
 
 };
 
-bool operator<(const Event& lhs, const Event& rhs);
-std::ostream& operator<<(std::ostream& os, const Event& event);
+template<typename T>
+bool operator<(const Event<T>& lhs, const Event<T>& rhs)
+{
+    return lhs.y < rhs.y;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const Event<T>& event)
+{
+    if(event.type == Event<T>::Type::SITE)
+        os << "S(" << event.site->index << ", " << event.y << ")";
+    else
+        os << "C(" << event.arc << ", " << event.y << ", " << event.point << ")";
+    return os;
+}
 
