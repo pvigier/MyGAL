@@ -19,43 +19,118 @@
 
 // STL
 #include <ostream>
+#include <cmath>
 
 // Declarations
 
+template<typename T>
 class Vector2;
-Vector2 operator-(Vector2 lhs, const Vector2& rhs);
+template<typename T>
+Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs);
 
 // Implementations
 
+template<typename T>
 class Vector2
 {
 public:
     double x;
     double y;
 
-    Vector2(double x = 0.0, double y = 0.0);
-    
+    Vector2<T>(double x = 0.0, double y = 0.0) : x(x), y(y)
+    {
+
+    }
+
     // Unary operators
 
-    Vector2 operator-() const;
-    Vector2& operator+=(const Vector2& other);
-    Vector2& operator-=(const Vector2& other);
-    Vector2& operator*=(double t);
+    Vector2<T> operator-() const
+    {
+        return Vector2<T>(-x, -y);
+    }
+
+    Vector2<T>& operator+=(const Vector2<T>& other)
+    {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+
+    Vector2<T>& operator-=(const Vector2<T>& other)
+    {
+        x -= other.x;
+        y -= other.y;
+        return *this;
+    }
+
+    Vector2<T>& operator*=(double t)
+    {
+        x *= t;
+        y *= t;
+        return *this; 
+    }
     
     // Other operations
     
-    Vector2 getOrthogonal() const;
-    double dot(const Vector2& other) const;
-    double getNorm() const;
-    double getDistance(const Vector2& other) const;
-    double getDet(const Vector2& other) const;
+    Vector2<T> getOrthogonal() const
+    {
+        return Vector2<T>(-y, x);
+    }
+
+    double dot(const Vector2<T>& other) const
+    {
+        return x * other.x + y * other.y;
+    }
+
+    double getNorm() const
+    {
+        return std::sqrt(x * x + y * y);
+    }
+
+    double getDistance(const Vector2<T>& other) const
+    {
+        return (*this - other).getNorm();
+    }
+
+    double getDet(const Vector2<T>& other) const
+    {
+        return x * other.y - y * other.x;
+    }
 };
 
 // Binary operators
 
-Vector2 operator+(Vector2 lhs, const Vector2& rhs);
-Vector2 operator-(Vector2 lhs, const Vector2& rhs);
-Vector2 operator*(double t, Vector2 vec);
-Vector2 operator*(Vector2 vec, double t);
-std::ostream& operator<<(std::ostream& os, const Vector2& vec);
+template<typename T>
+Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs)
+{
+    lhs += rhs;
+    return lhs;
+}
+
+template<typename T>
+Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs)
+{
+    lhs -= rhs;
+    return lhs;
+}
+
+template<typename T>
+Vector2<T> operator*(double t, Vector2<T> vec)
+{
+    vec *= t;
+    return vec;
+}
+
+template<typename T>
+Vector2<T> operator*(Vector2<T> vec, double t)
+{
+    return t * vec;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const Vector2<T>& vec)
+{
+    os << "(" << vec.x << ", " << vec.y << ")";
+    return os;
+}
 
