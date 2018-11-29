@@ -23,9 +23,7 @@
 #include "PriorityQueue.h"
 #include "VoronoiDiagram.h"
 #include "Beachline.h"
-
-template<typename T>
-class Event;
+#include "Event.h"
 
 template<typename T>
 class FortuneAlgorithm
@@ -76,7 +74,7 @@ public:
             {
                 // Bound the edge
                 auto direction = (leftArc->site->point - rightArc->site->point).getOrthogonal();
-                auto origin = (leftArc->site->point + rightArc->site->point) * 0.5f;
+                auto origin = (leftArc->site->point + rightArc->site->point) * static_cast<T>(0.5);
                 // Line-box intersection
                 auto intersection = box.getFirstIntersection(origin, direction);
                 // Create a new vertex and ends the half edges
@@ -317,7 +315,7 @@ private:
             (!rightBreakpointMovingRight && rightInitialX > convergencePoint.x));
         if (isValid && isBelow)
         {
-            auto event = std::make_unique<Event>(y, convergencePoint, middle);
+            auto event = std::make_unique<Event<T>>(y, convergencePoint, middle);
             middle->event = event.get();
             mEvents.push(std::move(event));
         }
@@ -336,9 +334,9 @@ private:
     {
         auto v1 = (point1 - point2).getOrthogonal();
         auto v2 = (point2 - point3).getOrthogonal();
-        auto delta = 0.5 * (point3 - point1);
+        auto delta = static_cast<T>(0.5) * (point3 - point1);
         auto t = delta.getDet(v2) / v1.getDet(v2);
-        auto center = 0.5 * (point1 + point2) + t * v1;
+        auto center = static_cast<T>(0.5) * (point1 + point2) + t * v1;
         auto r = center.getDistance(point1);
         y = center.y - r;
         return center;

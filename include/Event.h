@@ -43,7 +43,6 @@ public:
 
     }
 
-
     const Type type;
     T y;
     int index;

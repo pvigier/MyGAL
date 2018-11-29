@@ -84,13 +84,16 @@ public:
 
     // Remove copy operations
     VoronoiDiagram(const VoronoiDiagram&) = delete;
+
     VoronoiDiagram& operator=(const VoronoiDiagram&) = delete;
 
     // Move operations
     VoronoiDiagram(VoronoiDiagram&&) = default;
+
     VoronoiDiagram& operator=(VoronoiDiagram&&) = default;
 
     // Accessors
+
     Site* getSite(std::size_t i)
     {
         return &mSites[i];
@@ -117,6 +120,7 @@ public:
     }
 
     // Intersection with a box
+
     bool intersect(Box<T> box)
     {
         auto error = false;
@@ -127,8 +131,8 @@ public:
             auto halfEdge = site.face->outerComponent;
             auto inside = box.contains(halfEdge->origin->point);
             auto outerComponentDirty = !inside;
-            auto incomingHalfEdge = nullptr; // First half edge coming in the box
-            auto outgoingHalfEdge = nullptr; // Last half edge going out the box
+            auto incomingHalfEdge = static_cast<HalfEdge*>(nullptr); // First half edge coming in the box
+            auto outgoingHalfEdge = static_cast<HalfEdge*>(nullptr); // Last half edge going out the box
             auto incomingSide = typename Box<T>::Side{};
             auto outgoingSide = typename Box<T>::Side{};
             do
@@ -237,6 +241,7 @@ private:
     std::list<HalfEdge> mHalfEdges;
 
     // Diagram construction
+
     template<typename>
     friend class FortuneAlgorithm;
 
@@ -253,13 +258,13 @@ private:
         switch (side)
         {
             case Box<T>::Side::LEFT:
-                return createVertex(Vector2(box.left, box.top));
+                return createVertex(Vector2<T>(box.left, box.top));
             case Box<T>::Side::BOTTOM:
-                return createVertex(Vector2(box.left, box.bottom));
+                return createVertex(Vector2<T>(box.left, box.bottom));
             case Box<T>::Side::RIGHT:
-                return createVertex(Vector2(box.right, box.bottom));
+                return createVertex(Vector2<T>(box.right, box.bottom));
             case Box<T>::Side::TOP:
-                return createVertex(Vector2(box.right, box.top));
+                return createVertex(Vector2<T>(box.right, box.top));
             default:
                 return nullptr;
         }
@@ -276,6 +281,7 @@ private:
     }
 
     // Intersection with a box
+
     void link(Box<T> box, HalfEdge* start, typename Box<T>::Side startSide, HalfEdge* end, typename Box<T>::Side endSide)
     {
         auto halfEdge = start;

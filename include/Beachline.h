@@ -20,15 +20,13 @@
 // My includes
 #include "Vector2.h"
 #include "VoronoiDiagram.h"
-
-template<typename T>
-class Arc;
+#include "Arc.h"
 
 template<typename T>
 class Beachline
 {
 public:
-    Beachline()
+    Beachline() : mNil(new Arc<T>), mRoot(mNil)
     {
         mNil->color = Arc<T>::Color::BLACK; 
     }
@@ -39,11 +37,30 @@ public:
         delete mNil;
     }
 
-    // Remove copy and move operations
+    // Remove copy operations
+
     Beachline(const Beachline&) = delete;
     Beachline& operator=(const Beachline&) = delete;
-    Beachline(Beachline&&) = delete;
-    Beachline& operator=(Beachline&&) = delete;
+
+    // Move operations
+
+    Beachline(Beachline&& other)
+    {
+        mNil = other.mNil;
+        mRoot = other.mRoot;
+        other.mNil = nullptr;
+        other.mRoot = nullptr;
+    }
+
+    Beachline& operator=(Beachline&& other)
+    {
+        free(mRoot);
+        delete mNil;
+        mNil = other.mNil;
+        mRoot = other.mRoot;
+        other.mNil = nullptr;
+        other.mRoot = nullptr;
+    }
 
     Arc<T>* createArc(typename VoronoiDiagram<T>::Site* site)
     {
@@ -302,10 +319,9 @@ private:
     {
         while (x != mRoot && x->color == Arc<T>::Color::BLACK)
         {
-            auto w = mNil;
             if (x == x->parent->left)
             {
-                w = x->parent->right;
+                auto w = x->parent->right;
                 // Case 1
                 if (w->color == Arc<T>::Color::RED)
                 {
@@ -340,7 +356,7 @@ private:
             }
             else
             {
-                w = x->parent->left;
+                auto w = x->parent->left;
                 // Case 1
                 if (w->color == Arc<T>::Color::RED)
                 {
@@ -413,7 +429,7 @@ private:
         y->parent = x;
     }
 
-    double computeBreakpoint(const Vector2<T>& point1, const Vector2<T>& point2, T l) const
+    T computeBreakpoint(const Vector2<T>& point1, const Vector2<T>& point2, T l) const
     {
         auto x1 = point1.x, y1 = point1.y, x2 = point2.x, y2 = point2.y;
         auto d1 = 1.0 / (2.0 * (y1 - l));
