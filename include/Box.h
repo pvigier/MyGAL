@@ -51,8 +51,8 @@ public:
     Intersection getFirstIntersection(const Vector2<T>& origin, const Vector2<T>& direction) const
     {
         // origin must be in the box
-        Intersection intersection;
-        T t = std::numeric_limits<T>::infinity();
+        auto intersection = Intersection{};
+        auto t = std::numeric_limits<T>::infinity();
         if (direction.x > static_cast<T>(0.0))
         {
             t = (right - origin.x) / direction.x;
@@ -67,7 +67,7 @@ public:
         }
         if (direction.y > static_cast<T>(0.0))
         {
-            T newT = (top - origin.y) / direction.y;
+            auto newT = (top - origin.y) / direction.y;
             if (newT < t)
             {
                 intersection.side = Side::TOP;
@@ -76,7 +76,7 @@ public:
         }
         else if (direction.y < static_cast<T>(0.0))
         {
-            T newT = (bottom - origin.y) / direction.y;
+            auto newT = (bottom - origin.y) / direction.y;
             if (newT < t)
             {
                 intersection.side = Side::BOTTOM;
@@ -90,9 +90,9 @@ public:
     int getIntersections(const Vector2<T>& origin, const Vector2<T>& destination, std::array<Intersection, 2>& intersections) const
     {
         // WARNING: If the intersection is a corner, both intersections are equals
-        Vector2 direction = destination - origin;
-        std::array<T, 2> t;
-        std::size_t i = 0; // index of the current intersection
+        auto direction = destination - origin;
+        auto t = std::array<T, 2>();
+        auto i = std::size_t(0); // index of the current intersection
         // Left
         if (origin.x < left - EPSILON || destination.x < left - EPSILON)
         {   

@@ -34,10 +34,10 @@ template<typename T>
 class Vector2
 {
 public:
-    double x;
-    double y;
+    T x;
+    T y;
 
-    Vector2<T>(double x = 0.0, double y = 0.0) : x(x), y(y)
+    Vector2<T>(T x = 0.0, T y = 0.0) : x(x), y(y)
     {
 
     }
@@ -63,7 +63,7 @@ public:
         return *this;
     }
 
-    Vector2<T>& operator*=(double t)
+    Vector2<T>& operator*=(T t)
     {
         x *= t;
         y *= t;
@@ -77,22 +77,22 @@ public:
         return Vector2<T>(-y, x);
     }
 
-    double dot(const Vector2<T>& other) const
+    T dot(const Vector2<T>& other) const
     {
         return x * other.x + y * other.y;
     }
 
-    double getNorm() const
+    T getNorm() const
     {
         return std::sqrt(x * x + y * y);
     }
 
-    double getDistance(const Vector2<T>& other) const
+    T getDistance(const Vector2<T>& other) const
     {
         return (*this - other).getNorm();
     }
 
-    double getDet(const Vector2<T>& other) const
+    T getDet(const Vector2<T>& other) const
     {
         return x * other.y - y * other.x;
     }
@@ -115,14 +115,14 @@ Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs)
 }
 
 template<typename T>
-Vector2<T> operator*(double t, Vector2<T> vec)
+Vector2<T> operator*(T t, Vector2<T> vec)
 {
     vec *= t;
     return vec;
 }
 
 template<typename T>
-Vector2<T> operator*(Vector2<T> vec, double t)
+Vector2<T> operator*(Vector2<T> vec, T t)
 {
     return t * vec;
 }

@@ -119,23 +119,24 @@ public:
     // Intersection with a box
     bool intersect(Box<T> box)
     {
-        bool error = false;
-        std::unordered_set<HalfEdge*> processedHalfEdges;
-        std::unordered_set<Vertex*> verticesToRemove;
-        for (const Site& site : mSites)
+        auto error = false;
+        auto processedHalfEdges = std::unordered_set<HalfEdge*>();
+        auto verticesToRemove = std::unordered_set<Vertex*>();
+        for (const auto& site : mSites)
         {
-            HalfEdge* halfEdge = site.face->outerComponent;
-            bool inside = box.contains(halfEdge->origin->point);
-            bool outerComponentDirty = !inside;
-            HalfEdge* incomingHalfEdge = nullptr; // First half edge coming in the box
-            HalfEdge* outgoingHalfEdge = nullptr; // Last half edge going out the box
-            typename Box<T>::Side incomingSide, outgoingSide;
+            auto halfEdge = site.face->outerComponent;
+            auto inside = box.contains(halfEdge->origin->point);
+            auto outerComponentDirty = !inside;
+            auto incomingHalfEdge = nullptr; // First half edge coming in the box
+            auto outgoingHalfEdge = nullptr; // Last half edge going out the box
+            auto incomingSide = typename Box<T>::Side{};
+            auto outgoingSide = typename Box<T>::Side{};
             do
             {
-                std::array<typename Box<T>::Intersection, 2> intersections;
-                int nbIntersections = box.getIntersections(halfEdge->origin->point, halfEdge->destination->point, intersections);
-                bool nextInside = box.contains(halfEdge->destination->point);
-                HalfEdge* nextHalfEdge = halfEdge->next;
+                auto intersections = std::array<typename Box<T>::Intersection, 2>{};
+                auto nbIntersections = box.getIntersections(halfEdge->origin->point, halfEdge->destination->point, intersections);
+                auto nextInside = box.contains(halfEdge->destination->point);
+                auto nextHalfEdge = halfEdge->next;
                 // The two points are outside the box 
                 if (!inside && !nextInside)
                 {
@@ -277,8 +278,8 @@ private:
     // Intersection with a box
     void link(Box<T> box, HalfEdge* start, typename Box<T>::Side startSide, HalfEdge* end, typename Box<T>::Side endSide)
     {
-        HalfEdge* halfEdge = start;
-        int side = static_cast<int>(startSide);
+        auto halfEdge = start;
+        auto side = static_cast<int>(startSide);
         while (side != static_cast<int>(endSide))
         {
             side = (side + 1) % 4;
@@ -300,7 +301,6 @@ private:
     {
         mVertices.erase(vertex->it);
     }
-
 
     void removeHalfEdge(HalfEdge* halfEdge)
     {

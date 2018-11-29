@@ -1,4 +1,4 @@
-/* MyGAL
+/* FortuneAlgorithm
  * Copyright (C) 2018 Pierre Vigier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-// TO DO: Replace raw pointers by std::unique_ptr
-
 #pragma once
 
 // STL
@@ -60,7 +57,7 @@ public:
 
     void update(std::size_t i)
     {
-        int parent = getParent(i);
+        auto parent = getParent(i);
         if(parent >= 0 && *mElements[parent] < *mElements[i])
             siftUp(i);
         else
@@ -112,9 +109,9 @@ private:
 
     void siftDown(std::size_t i)
     {
-        std::size_t left = getLeftChild(i);
-        std::size_t right = getRightChild(i);
-        std::size_t j = i;
+        auto left = getLeftChild(i);
+        auto right = getRightChild(i);
+        auto j = i;
         if(left < mElements.size() && *mElements[j] < *mElements[left])
             j = left;
         if(right < mElements.size() && *mElements[j] < *mElements[right])
@@ -128,7 +125,7 @@ private:
 
     void siftUp(std::size_t i)
     {
-        int parent = getParent(i);
+        auto parent = getParent(i);
         if(parent >= 0 && *mElements[parent] < *mElements[i])
         {
             swap(i, parent);

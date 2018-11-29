@@ -219,6 +219,7 @@ private:
     Arc<T>* mRoot;
 
     // Utility methods
+
     Arc<T>* minimum(Arc<T>* x) const
     {
         while (!isNil(x->left))
@@ -238,6 +239,7 @@ private:
     }
 
     // Fixup functions
+
     void insertFixup(Arc<T>* z)
     {
         while (z->parent->color == Arc<T>::Color::RED)
@@ -376,6 +378,7 @@ private:
     }
 
     // Rotations
+
     void leftRotate(Arc<T>* x)
     {
         auto y = x->right;

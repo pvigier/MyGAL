@@ -31,7 +31,7 @@ public:
     enum class Type{SITE, CIRCLE};
 
     // Site event
-    Event(VoronoiDiagram<T>::Site* site) : type(Type::SITE), y(site->point.y), index(-1), site(site)
+    Event(typename VoronoiDiagram<T>::Site* site) : type(Type::SITE), y(site->point.y), index(-1), site(site)
     {
 
     }
@@ -48,7 +48,7 @@ public:
     T y;
     int index;
     // Site event
-    VoronoiDiagram<T>::Site* site;
+    typename VoronoiDiagram<T>::Site* site;
     // Circle event
     Vector2<T> point;
     Arc<T>* arc;
