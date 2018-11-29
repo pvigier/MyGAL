@@ -16,21 +16,20 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -s")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Files
-
-file(GLOB_RECURSE SRCS src/*.cpp)
-file(GLOB_RECURSE HEADERS include/*.h)
-
-# Search directories
-
-include_directories(include)
-
 # Executable
 
-set(EXECUTABLE_NAME "MyGAL")
-add_executable(${EXECUTABLE_NAME} ${SRCS} ${HEADERS})
+set(EXECUTABLE_NAME MyGAL)
+add_executable(${EXECUTABLE_NAME} main.cpp)
 
 # Libraries
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
+
+find_package(SFML 2.4 REQUIRED graphics window system)
+if(SFML_FOUND)
+    include_directories(${SFML_INCLUDE_DIR})
+    target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+else()
+    message(FATAL_ERROR "SFML not found")
+endif()
 
