@@ -237,6 +237,30 @@ public:
         return !error;
     }
 
+    // Lloyd's relaxation
+
+    std::vector<Vector2<T>> computeLloydRelaxation()
+    {
+        auto sites = std::vector<Vector2<T>>();
+        for (const auto& face : mFaces)
+        {
+            auto area = static_cast<T>(0.0);
+            auto centroid = Vector2<T>();
+            auto halfEdge = face.outerComponent;
+            do
+            {
+                auto det = halfEdge->origin->point.getDet(halfEdge->destination->point);
+                area += det;
+                centroid += (halfEdge->origin->point + halfEdge->destination->point) * det;
+                halfEdge = halfEdge->next;
+            } while (halfEdge != face.outerComponent);
+            area *= 0.5;
+            centroid *= 1.0 / (6.0 * area);
+            sites.push_back(centroid);
+        }
+        return sites;
+    }
+
 private:
     std::vector<Site> mSites;
     std::vector<Face> mFaces;

@@ -110,11 +110,8 @@ void drawDiagram(sf::RenderWindow& window, VoronoiDiagram<T>& diagram)
 }
 
 template<typename T>
-VoronoiDiagram<T> generateRandomDiagram(std::size_t nbPoints)
+VoronoiDiagram<T> generateDiagram(const std::vector<Vector2<T>>& points)
 {
-    // Generate points
-    auto points = generatePoints<T>(nbPoints);
-
     // Construct diagram
     auto algorithm = FortuneAlgorithm<T>(points);
     auto start = std::chrono::steady_clock::now();
@@ -143,7 +140,7 @@ VoronoiDiagram<T> generateRandomDiagram(std::size_t nbPoints)
 int main()
 {
     auto nbPoints = 100;
-    auto diagram = generateRandomDiagram<Float>(nbPoints);
+    auto diagram = generateDiagram(generatePoints<Float>(nbPoints));
 
     // Display the diagram
     sf::ContextSettings settings;
@@ -159,7 +156,9 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Key::N)
-                diagram = generateRandomDiagram<Float>(nbPoints);
+                diagram = generateDiagram(generatePoints<Float>(nbPoints));
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Key::R)
+                diagram = generateDiagram(diagram.computeLloydRelaxation());
         }
 
         window.clear(sf::Color::Black);
