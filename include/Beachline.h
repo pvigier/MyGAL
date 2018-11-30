@@ -22,6 +22,9 @@
 #include "VoronoiDiagram.h"
 #include "Arc.h"
 
+namespace mygal
+{
+
 template<typename T>
 class Beachline
 {
@@ -468,4 +471,6 @@ template<typename T>
 std::ostream& operator<<(std::ostream& os, const Beachline<T>& beachline)
 {
     return beachline.print(os);
+}
+
 }

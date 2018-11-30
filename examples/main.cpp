@@ -25,6 +25,8 @@
 // My includes
 #include "../include/FortuneAlgorithm.h"
 
+using namespace mygal;
+
 using Float = double;
 
 constexpr Float WINDOW_WIDTH = 600.0f;

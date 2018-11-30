@@ -21,6 +21,9 @@
 #include <vector>
 #include <memory>
 
+namespace mygal
+{
+
 template<typename T>
 class PriorityQueue
 {
@@ -147,4 +150,6 @@ template <typename T>
 std::ostream& operator<<(std::ostream& os, const PriorityQueue<T>& queue)
 {
     return queue.print(os);
+}
+
 }

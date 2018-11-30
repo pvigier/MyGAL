@@ -20,6 +20,9 @@
 // My includes
 #include "VoronoiDiagram.h"
 
+namespace mygal
+{
+
 template<typename T>
 class Event;
 
@@ -44,3 +47,4 @@ struct Arc
     Color color;
 };
 
+}

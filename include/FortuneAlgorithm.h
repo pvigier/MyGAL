@@ -25,6 +25,9 @@
 #include "Beachline.h"
 #include "Event.h"
 
+namespace mygal
+{
+
 template<typename T>
 class FortuneAlgorithm
 {
@@ -352,3 +355,4 @@ private:
     };
 };
 
+}

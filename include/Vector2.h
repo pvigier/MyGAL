@@ -21,6 +21,9 @@
 #include <ostream>
 #include <cmath>
 
+namespace mygal
+{
+
 // Declarations
 
 template<typename T>
@@ -134,3 +137,4 @@ std::ostream& operator<<(std::ostream& os, const Vector2<T>& vec)
     return os;
 }
 
+}

@@ -21,6 +21,9 @@
 #include "Vector2.h"
 #include "VoronoiDiagram.h"
 
+namespace mygal
+{
+
 template<typename T>
 class Arc;
 
@@ -70,3 +73,4 @@ std::ostream& operator<<(std::ostream& os, const Event<T>& event)
     return os;
 }
 
+}

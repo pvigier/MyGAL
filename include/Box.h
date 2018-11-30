@@ -23,6 +23,9 @@
 // My includes
 #include "Vector2.h"
 
+namespace mygal
+{
+
 template<typename T>
 class Box
 {
@@ -151,3 +154,4 @@ private:
     static constexpr T EPSILON = std::numeric_limits<T>::epsilon();
 };
 
+}

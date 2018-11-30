@@ -24,6 +24,9 @@
 // My includes
 #include "Box.h"
 
+namespace mygal
+{
+
 template<typename T>
 class FortuneAlgorithm;
 
@@ -313,3 +316,5 @@ private:
         mHalfEdges.erase(halfEdge->it);
     }
 };
+
+}
