@@ -23,6 +23,7 @@
 #include <unordered_set>
 // My includes
 #include "Box.h"
+#include "Triangulation.h"
 
 namespace mygal
 {
@@ -86,13 +87,13 @@ public:
     }
 
     // Remove copy operations
-    Diagram(const Diagram&) = delete;
 
+    Diagram(const Diagram&) = delete;
     Diagram& operator=(const Diagram&) = delete;
 
     // Move operations
-    Diagram(Diagram&&) = default;
 
+    Diagram(Diagram&&) = default;
     Diagram& operator=(Diagram&&) = default;
 
     // Accessors
@@ -259,6 +260,33 @@ public:
             sites.push_back(centroid);
         }
         return sites;
+    }
+
+    // Triangulation
+
+    Triangulation computeTriangulation()
+    {
+        auto neighbors = std::vector<std::vector<std::size_t>>(mSites.size());
+        for (std::size_t i = 0; i < mSites.size(); ++i)
+        {
+            auto face = mFaces[i];
+            auto halfEdge = face.outerComponent;
+            while (halfEdge->prev != nullptr)
+            {
+                halfEdge = halfEdge->prev;
+                if(halfEdge == face.outerComponent)
+                    break;
+            }
+            while (halfEdge != nullptr)
+            {
+                if (halfEdge->twin != nullptr)
+                    neighbors[i].push_back(halfEdge->twin->incidentFace->site->index);
+                halfEdge = halfEdge->next;
+                if(halfEdge == face.outerComponent)
+                    break;
+            }
+        }
+        return Triangulation(neighbors);
     }
 
 private:

@@ -34,6 +34,8 @@ constexpr Float WINDOW_HEIGHT = 600.0f;
 constexpr Float POINT_RADIUS = 0.005f;
 constexpr Float OFFSET = 1.0f;
 
+// Random generation
+
 template<typename T>
 std::vector<Vector2<T>> generatePoints(int nbPoints)
 {
@@ -48,6 +50,8 @@ std::vector<Vector2<T>> generatePoints(int nbPoints)
 
     return points;
 }
+
+// Rendering
 
 template<typename T>
 void drawPoint(sf::RenderWindow& window, Vector2<T> point, sf::Color color)
@@ -110,6 +114,22 @@ void drawDiagram(sf::RenderWindow& window, Diagram<T>& diagram)
 }
 
 template<typename T>
+void drawTriangulation(sf::RenderWindow& window, Diagram<T>& diagram, Triangulation& triangulation)
+{
+    for(size_t i = 0; i < diagram.getNbSites(); ++i)
+    {
+        auto origin = diagram.getSite(i)->point;
+        for(const auto& j : triangulation.getNeighbors(i))
+        {
+            auto destination = diagram.getSite(j)->point;
+            drawEdge(window, origin, destination, sf::Color::Green);
+        }
+    }
+}
+
+// Generating the diagram
+
+template<typename T>
 Diagram<T> generateDiagram(const std::vector<Vector2<T>>& points)
 {
     // Construct diagram
@@ -141,12 +161,14 @@ int main()
 {
     auto nbPoints = 100;
     auto diagram = generateDiagram(generatePoints<Float>(nbPoints));
+    auto triangulation = diagram.computeTriangulation();
 
     // Display the diagram
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Fortune's algorithm", sf::Style::Default, settings);
     window.setView(sf::View(sf::FloatRect(-0.1f, -0.1f, 1.2f, 1.2f)));
+    bool showTriangulation = false;
 
     while (window.isOpen())
     {
@@ -155,16 +177,29 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Key::N)
-                diagram = generateDiagram(generatePoints<Float>(nbPoints));
-            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Key::R)
-                diagram = generateDiagram(diagram.computeLloydRelaxation());
+            else if (event.type == sf::Event::KeyReleased)
+            {
+                if (event.key.code == sf::Keyboard::Key::N)
+                {
+                    diagram = generateDiagram(generatePoints<Float>(nbPoints));
+                    triangulation = diagram.computeTriangulation();
+                }
+                else if (event.key.code == sf::Keyboard::Key::R)
+                {
+                    diagram = generateDiagram(diagram.computeLloydRelaxation());
+                    triangulation = diagram.computeTriangulation();
+                }
+                else if (event.key.code == sf::Keyboard::Key::T)
+                    showTriangulation = !showTriangulation;
+            }
         }
 
         window.clear(sf::Color::Black);
 
         drawDiagram(window, diagram);
         drawPoints(window, diagram);
+        if (showTriangulation)
+            drawTriangulation(window, diagram, triangulation);
 
         window.display();
     }
