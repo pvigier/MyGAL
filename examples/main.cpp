@@ -70,14 +70,14 @@ void drawEdge(sf::RenderWindow& window, Vector2<T> origin, Vector2<T> destinatio
 }
 
 template<typename T>
-void drawPoints(sf::RenderWindow& window, VoronoiDiagram<T>& diagram)
+void drawPoints(sf::RenderWindow& window, Diagram<T>& diagram)
 {
     for (std::size_t i = 0; i < diagram.getNbSites(); ++i)
         drawPoint(window, diagram.getSite(i)->point, sf::Color(100, 250, 50));
 }
 
 template<typename T>
-void drawDiagram(sf::RenderWindow& window, VoronoiDiagram<T>& diagram)
+void drawDiagram(sf::RenderWindow& window, Diagram<T>& diagram)
 {
     for (std::size_t i = 0; i < diagram.getNbSites(); ++i)
     {
@@ -110,7 +110,7 @@ void drawDiagram(sf::RenderWindow& window, VoronoiDiagram<T>& diagram)
 }
 
 template<typename T>
-VoronoiDiagram<T> generateDiagram(const std::vector<Vector2<T>>& points)
+Diagram<T> generateDiagram(const std::vector<Vector2<T>>& points)
 {
     // Construct diagram
     auto algorithm = FortuneAlgorithm<T>(points);

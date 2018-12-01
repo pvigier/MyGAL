@@ -18,7 +18,7 @@
 #pragma once
 
 // My includes
-#include "VoronoiDiagram.h"
+#include "Diagram.h"
 
 namespace mygal
 {
@@ -36,9 +36,9 @@ struct Arc
     Arc<T>* left;
     Arc<T>* right;
     // Diagram
-    typename VoronoiDiagram<T>::Site* site;
-    typename VoronoiDiagram<T>::HalfEdge* leftHalfEdge;
-    typename VoronoiDiagram<T>::HalfEdge* rightHalfEdge;
+    typename Diagram<T>::Site* site;
+    typename Diagram<T>::HalfEdge* leftHalfEdge;
+    typename Diagram<T>::HalfEdge* rightHalfEdge;
     Event<T>* event;
     // Optimizations
     Arc<T>* prev;

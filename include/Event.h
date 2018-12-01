@@ -19,7 +19,7 @@
 
 // My includes
 #include "Vector2.h"
-#include "VoronoiDiagram.h"
+#include "Diagram.h"
 
 namespace mygal
 {
@@ -34,7 +34,7 @@ public:
     enum class Type{SITE, CIRCLE};
 
     // Site event
-    Event(typename VoronoiDiagram<T>::Site* site) : type(Type::SITE), y(site->point.y), index(-1), site(site)
+    Event(typename Diagram<T>::Site* site) : type(Type::SITE), y(site->point.y), index(-1), site(site)
     {
 
     }
@@ -50,7 +50,7 @@ public:
     T y;
     int index;
     // Site event
-    typename VoronoiDiagram<T>::Site* site;
+    typename Diagram<T>::Site* site;
     // Circle event
     Vector2<T> point;
     Arc<T>* arc;

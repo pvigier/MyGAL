@@ -31,7 +31,7 @@ template<typename T>
 class FortuneAlgorithm;
 
 template<typename T>
-class VoronoiDiagram
+class Diagram
 {
 public:
     struct HalfEdge;
@@ -49,7 +49,7 @@ public:
         Vector2<T> point;
 
     private:
-        friend VoronoiDiagram<T>;
+        friend Diagram<T>;
         typename std::list<Vertex>::iterator it;
     };
 
@@ -63,7 +63,7 @@ public:
         HalfEdge* next = nullptr;
 
     private:
-        friend VoronoiDiagram;
+        friend Diagram;
         typename std::list<HalfEdge>::iterator it;
     };
 
@@ -73,27 +73,27 @@ public:
         HalfEdge* outerComponent;
     };
 
-    VoronoiDiagram(const std::vector<Vector2<T>>& points)
+    Diagram(const std::vector<Vector2<T>>& points)
     {
         mSites.reserve(points.size());
         mFaces.reserve(points.size());
         for(std::size_t i = 0; i < points.size(); ++i)
         {
-            mSites.push_back(VoronoiDiagram::Site{i, points[i], nullptr});
-            mFaces.push_back(VoronoiDiagram::Face{&mSites.back(), nullptr});
+            mSites.push_back(Diagram::Site{i, points[i], nullptr});
+            mFaces.push_back(Diagram::Face{&mSites.back(), nullptr});
             mSites.back().face = &mFaces.back();
         }
     }
 
     // Remove copy operations
-    VoronoiDiagram(const VoronoiDiagram&) = delete;
+    Diagram(const Diagram&) = delete;
 
-    VoronoiDiagram& operator=(const VoronoiDiagram&) = delete;
+    Diagram& operator=(const Diagram&) = delete;
 
     // Move operations
-    VoronoiDiagram(VoronoiDiagram&&) = default;
+    Diagram(Diagram&&) = default;
 
-    VoronoiDiagram& operator=(VoronoiDiagram&&) = default;
+    Diagram& operator=(Diagram&&) = default;
 
     // Accessors
 

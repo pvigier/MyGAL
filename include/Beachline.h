@@ -19,7 +19,7 @@
 
 // My includes
 #include "Vector2.h"
-#include "VoronoiDiagram.h"
+#include "Diagram.h"
 #include "Arc.h"
 
 namespace mygal
@@ -65,7 +65,7 @@ public:
         other.mRoot = nullptr;
     }
 
-    Arc<T>* createArc(typename VoronoiDiagram<T>::Site* site)
+    Arc<T>* createArc(typename Diagram<T>::Site* site)
     {
         return new Arc<T>{mNil, mNil, mNil, site, nullptr, nullptr, nullptr, mNil, mNil, Arc<T>::Color::RED};
     }

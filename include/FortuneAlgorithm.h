@@ -22,7 +22,7 @@
 #include <iostream>
 // My includes
 #include "PriorityQueue.h"
-#include "VoronoiDiagram.h"
+#include "Diagram.h"
 #include "Beachline.h"
 #include "Event.h"
 
@@ -158,13 +158,13 @@ public:
         return true; // TO DO: detect errors
     }
 
-    VoronoiDiagram<T> getDiagram()
+    Diagram<T> getDiagram()
     {
         return std::move(mDiagram);
     }
 
 private:
-    VoronoiDiagram<T> mDiagram;
+    Diagram<T> mDiagram;
     Beachline<T> mBeachline;
     PriorityQueue<Event<T>> mEvents;
     T mBeachlineY;
@@ -224,7 +224,7 @@ private:
 
     // Arcs
 
-    Arc<T>* breakArc(Arc<T>* arc, typename VoronoiDiagram<T>::Site* site)
+    Arc<T>* breakArc(Arc<T>* arc, typename Diagram<T>::Site* site)
     {
         // Create the new subtree
         auto middleArc = mBeachline.createArc(site);
@@ -242,7 +242,7 @@ private:
         return middleArc;
     }
 
-    void removeArc(Arc<T>* arc, typename VoronoiDiagram<T>::Vertex* vertex)
+    void removeArc(Arc<T>* arc, typename Diagram<T>::Vertex* vertex)
     {
         // End edges
         setDestination(arc->prev, arc, vertex);
@@ -287,19 +287,19 @@ private:
         right->leftHalfEdge->twin = left->rightHalfEdge;
     }
 
-    void setOrigin(Arc<T>* left, Arc<T>* right, typename VoronoiDiagram<T>::Vertex* vertex)
+    void setOrigin(Arc<T>* left, Arc<T>* right, typename Diagram<T>::Vertex* vertex)
     {
         left->rightHalfEdge->destination = vertex;
         right->leftHalfEdge->origin = vertex;
     }
 
-    void setDestination(Arc<T>* left, Arc<T>* right, typename VoronoiDiagram<T>::Vertex* vertex)
+    void setDestination(Arc<T>* left, Arc<T>* right, typename Diagram<T>::Vertex* vertex)
 {
     left->rightHalfEdge->origin = vertex;
     right->leftHalfEdge->destination = vertex;
 }
 
-    void setPrevHalfEdge(typename VoronoiDiagram<T>::HalfEdge* prev, typename VoronoiDiagram<T>::HalfEdge* next)
+    void setPrevHalfEdge(typename Diagram<T>::HalfEdge* prev, typename Diagram<T>::HalfEdge* next)
     {
         prev->next = next;
         next->prev = prev;
@@ -354,9 +354,9 @@ private:
 
     struct LinkedVertex
     {
-        typename VoronoiDiagram<T>::HalfEdge* prevHalfEdge;
-        typename VoronoiDiagram<T>::Vertex* vertex;
-        typename VoronoiDiagram<T>::HalfEdge* nextHalfEdge;
+        typename Diagram<T>::HalfEdge* prevHalfEdge;
+        typename Diagram<T>::Vertex* vertex;
+        typename Diagram<T>::HalfEdge* nextHalfEdge;
     };
 };
 
