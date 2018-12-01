@@ -31,6 +31,9 @@ namespace mygal
 template<typename T>
 class FortuneAlgorithm;
 
+/**
+ * \brief Data structure representing a partitioning of the space
+ */
 template<typename T>
 class Diagram
 {
@@ -38,53 +41,56 @@ public:
     struct HalfEdge;
     struct Face;
 
+    /**
+     * \brief Point associated with a face of the partitioning
+     */
     struct Site
     {
-        std::size_t index;
-        Vector2<T> point;
-        Face* face;
+        std::size_t index; /**< Index of the site in mSites */
+        Vector2<T> point; /**< Coordinates of the site */
+        Face* face; /**< Face associated with the site */
     };
 
+    /**
+     * \brief Vertex of a face
+     */
     struct Vertex
     {
-        Vector2<T> point;
+        Vector2<T> point; /**< Coordinates of the vertex */
 
     private:
         friend Diagram<T>;
         typename std::list<Vertex>::iterator it;
     };
 
+    /**
+     * \brief Half-edge of a face
+     */
     struct HalfEdge
     {
-        Vertex* origin = nullptr;
-        Vertex* destination = nullptr;
-        HalfEdge* twin = nullptr;
-        Face* incidentFace;
-        HalfEdge* prev = nullptr;
-        HalfEdge* next = nullptr;
+        Vertex* origin = nullptr; /**< First vertex of the half-edge */
+        Vertex* destination = nullptr; /**< Second vertex of the half-edge */
+        HalfEdge* twin = nullptr; /**< Twin half-edge */
+        Face* incidentFace; /**< Face to which this half-edge belongs to */
+        HalfEdge* prev = nullptr; /**< Previous half-edge in the face frontier */
+        HalfEdge* next = nullptr; /**< Next half-edge in the face frontier */
 
     private:
         friend Diagram;
         typename std::list<HalfEdge>::iterator it;
     };
 
+    /**
+     * \brief Structure representing a cell in the diagram
+     *
+     * The outer component of the face is represented as a doubly linked list.
+     * If the face is bounded, the list is circular.
+     */
     struct Face
     {
-        Site* site;
-        HalfEdge* outerComponent;
+        Site* site; /**< Site associated with this face */
+        HalfEdge* outerComponent; /**< A half-edge of the face */
     };
-
-    Diagram(const std::vector<Vector2<T>>& points)
-    {
-        mSites.reserve(points.size());
-        mFaces.reserve(points.size());
-        for(std::size_t i = 0; i < points.size(); ++i)
-        {
-            mSites.push_back(Diagram::Site{i, points[i], nullptr});
-            mFaces.push_back(Diagram::Face{&mSites.back(), nullptr});
-            mSites.back().face = &mFaces.back();
-        }
-    }
 
     // Remove copy operations
 
@@ -98,26 +104,55 @@ public:
 
     // Accessors
 
+    /**
+     * \brief Get a site
+     *
+     * \param i Index of the requested site
+     *
+     * \return Pointer to the requested site
+     */
     Site* getSite(std::size_t i)
     {
         return &mSites[i];
     }
 
+    /**
+     * \brief Get the number of sites
+     *
+     * \return The number of sites
+     */
     std::size_t getNbSites() const
     {
         return mSites.size();
     }
 
+    /**
+     * \brief Get a face
+     *
+     * \param i Index of the site associated with the requested face
+     *
+     * \return Pointer to the requested face
+     */
     Face* getFace(std::size_t i)
     {
         return &mFaces[i];
     }
 
+    /**
+     * \brief Get vertices
+     *
+     * \return Const reference to the list of vertices of the diagram
+     */
     const std::list<Vertex>& getVertices() const
     {
         return mVertices;
     }
 
+    /**
+     * \brief Get half-edges
+     *
+     * \return Const reference to the list of half-edges of the diagram
+     */
     const std::list<HalfEdge>& getHalfEdges() const
     {
         return mHalfEdges;
@@ -125,6 +160,13 @@ public:
 
     // Intersection with a box
 
+    /**
+     * \brief Compute the intersection between the diagram and a box
+     *
+     * The diagram must be bounded before calling this method.
+     *
+     * \return True if no error occurs during intersection, false otherwise
+     */
     bool intersect(Box<T> box)
     {
         auto error = false;
@@ -240,7 +282,16 @@ public:
 
     // Lloyd's relaxation
 
-    std::vector<Vector2<T>> computeLloydRelaxation()
+    /**
+     * \brief Compute a Lloyd relaxation
+     *
+     * For each cell of the diagram, the algorithm computes the centroid of this cell.
+     *
+     * The diagram must be bounded before calling this method.
+     *
+     * \return Vector of centroids of the cells
+     */
+    std::vector<Vector2<T>> computeLloydRelaxation() const
     {
         auto sites = std::vector<Vector2<T>>();
         for (const auto& face : mFaces)
@@ -264,7 +315,17 @@ public:
 
     // Triangulation
 
-    Triangulation computeTriangulation()
+    /**
+     * \brief Compute the triangulation induced by the diagram
+     *
+     * If the diagram is a Voronoi diagram then the output of this method is
+     * a Delaunay triangulation.
+     *
+     * This method can be called even if the diagram is not bounded.
+     *
+     * \return The triangulation induced by the diagram
+     */
+    Triangulation computeTriangulation() const
     {
         auto neighbors = std::vector<std::vector<std::size_t>>(mSites.size());
         for (std::size_t i = 0; i < mSites.size(); ++i)
@@ -290,12 +351,24 @@ public:
     }
 
 private:
-    std::vector<Site> mSites;
-    std::vector<Face> mFaces;
-    std::list<Vertex> mVertices;
-    std::list<HalfEdge> mHalfEdges;
+    std::vector<Site> mSites; /**< Sites of the diagram */
+    std::vector<Face> mFaces; /**< Faces of the diagram */
+    std::list<Vertex> mVertices; /**< Vertices of the diagram */
+    std::list<HalfEdge> mHalfEdges; /**< Half-edges of the diagram */
 
     // Diagram construction
+
+    Diagram(const std::vector<Vector2<T>>& points)
+    {
+        mSites.reserve(points.size());
+        mFaces.reserve(points.size());
+        for(std::size_t i = 0; i < points.size(); ++i)
+        {
+            mSites.push_back(Diagram::Site{i, points[i], nullptr});
+            mFaces.push_back(Diagram::Face{&mSites.back(), nullptr});
+            mSites.back().face = &mFaces.back();
+        }
+    }
 
     template<typename>
     friend class FortuneAlgorithm;

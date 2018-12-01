@@ -40,3 +40,7 @@ compile_commands.json
 
 # Build
 build
+
+# Doxygen
+doc/*
+!doc/Doxyfile
