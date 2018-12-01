@@ -1,4 +1,4 @@
-/* FortuneAlgorithm
+/* MyGAL
  * Copyright (C) 2018 Pierre Vigier
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 
 // STL
 #include <unordered_map>
+#include <iostream>
 // My includes
 #include "PriorityQueue.h"
 #include "VoronoiDiagram.h"
@@ -89,8 +90,12 @@ public:
                 if (vertices.find(rightArc->site->index) == vertices.end()) 
                     vertices[rightArc->site->index].fill(nullptr); 
                 // Store the vertex on the boundaries
+                if (vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1])
+                    std::cout << "error" << std::endl;
                 linkedVertices.emplace_back(LinkedVertex{nullptr, vertex, leftArc->rightHalfEdge});
                 vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1] = &linkedVertices.back();
+                if (vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)])
+                    std::cout << "error" << std::endl;
                 linkedVertices.emplace_back(LinkedVertex{rightArc->leftHalfEdge, vertex, nullptr});
                 vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)] = &linkedVertices.back();
                 // Next edge

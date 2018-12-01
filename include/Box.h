@@ -1,4 +1,4 @@
-/* FortuneAlgorithm
+/* MyGAL
  * Copyright (C) 2018 Pierre Vigier
  *
  * This program is free software: you can redistribute it and/or modify
