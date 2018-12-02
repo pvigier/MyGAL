@@ -20,6 +20,9 @@
 // My includes
 #include "Diagram.h"
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 

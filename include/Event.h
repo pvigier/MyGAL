@@ -21,6 +21,9 @@
 #include "Vector2.h"
 #include "Diagram.h"
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 

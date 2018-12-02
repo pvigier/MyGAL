@@ -23,14 +23,39 @@
 // My includes
 #include "Vector2.h"
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 
 template<typename T>
+class Diagram;
+
+template<typename T>
+class FortuneAlgorithm;
+
+/**
+ * \brief Class representing a box
+ *
+ * Be careful, the y-axis is oriented to the top like in math.
+ * This `bottom` must be lower to `top`.
+ *
+ * \author Pierre Vigier
+ */
+template<typename T>
 class Box
 {
 public:
-    // Be careful, y-axis is oriented to the top like in math
+    T left; /**< x-coordinate of the left side of the box */
+    T bottom; /**< y-coordinate of the bottom side of the box */
+    T right;/**< x-coordinate of the right side of the box */
+    T top; /**< y-coordinate of the top side of the box */
+
+private:
+    friend Diagram<T>;
+    friend FortuneAlgorithm<T>;
+
     enum class Side : int {LEFT, BOTTOM, RIGHT, TOP};
 
     struct Intersection
@@ -38,11 +63,6 @@ public:
         Side side;
         Vector2<T> point;
     };
-
-    T left;
-    T bottom;
-    T right;
-    T top;
 
     bool contains(const Vector2<T>& point) const
     {

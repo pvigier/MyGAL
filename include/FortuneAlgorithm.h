@@ -26,19 +26,41 @@
 #include "Beachline.h"
 #include "Event.h"
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 
+/**
+ * \brief Implementation of Fortune's algorithm
+ *
+ * \tparam T Floating point type (`float`, `double` or `long double`) to use in the algorithm
+ *
+ * \author Pierre Vigier
+ */
 template<typename T>
 class FortuneAlgorithm
 {
 public:
-    
+    /**
+     * \brief Constructor of FortuneAlgorithm
+     *
+     * The points must all be unique.
+     *
+     * \param points Coordinates of the sites that will be used to generate the Voronoi diagram
+     */
     FortuneAlgorithm(std::vector<Vector2<T>> points) : mDiagram(std::move(points))
     {
 
     }
 
+    /**
+     * \brief Execute Fortune's algorithm to construct the diagram
+     *
+     * At the end of this method, the diagram is unbounded. The method 
+     * FortuneAlgorithm::bound shoud be called to bound the diagram.
+     */
     void construct()
     {
         // Initialize event queue
@@ -57,6 +79,17 @@ public:
         }
     }
 
+    /**
+     * \brief Bound the Voronoi diagram
+     *
+     * The method FortuneAlgorithm::construct must be called before this one to construct the diagram.
+     *
+     * The algorithm does not guarantee that the box passed as parameter will
+     * be used for bounding. It only guarantees that the used box contains the
+     * one passed as parameter.
+     *
+     * \param box Smallest box to use for bounding
+     */
     bool bound(Box<T> box)
     {
         // Make sure the bounding box contains all the vertices
@@ -158,6 +191,13 @@ public:
         return true; // TO DO: detect errors
     }
 
+    /**
+     * \brief Return the constructed diagram
+     *
+     * The diagram is moved thus the method can only be called once.
+     *
+     * \return Diagram constructed by the class
+     */
     Diagram<T> getDiagram()
     {
         return std::move(mDiagram);

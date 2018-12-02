@@ -21,6 +21,9 @@
 #include <vector>
 #include <memory>
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 

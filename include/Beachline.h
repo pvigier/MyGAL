@@ -22,6 +22,9 @@
 #include "Diagram.h"
 #include "Arc.h"
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 

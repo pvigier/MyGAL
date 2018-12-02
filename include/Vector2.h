@@ -21,6 +21,9 @@
 #include <ostream>
 #include <cmath>
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 
@@ -33,13 +36,26 @@ Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs);
 
 // Implementations
 
+/**
+ * \brief Class representing a 2D vector
+ *
+ * This class can be used to represent a 2D point too.
+ *
+ * \author Pierre Vigier
+ */
 template<typename T>
 class Vector2
 {
 public:
-    T x;
-    T y;
+    T x; /**< x-coordinate of the vector */
+    T y; /**< y-coordinate of the vector */
 
+    /**
+     * \brief Default constructor
+     *
+     * \param x x-coordinate
+     * \param y y-coordinate
+     */
     Vector2<T>(T x = 0.0, T y = 0.0) : x(x), y(y)
     {
 
@@ -47,11 +63,24 @@ public:
 
     // Unary operators
 
+    /**
+     * \brief Compute the opposite vector
+     *
+     * \return The opposite vector
+     *
+     */
     Vector2<T> operator-() const
     {
         return Vector2<T>(-x, -y);
     }
 
+    /**
+     * \brief Add a vector
+     * 
+     * \param other Vector to add
+     *
+     * \return This vector after addition
+     */
     Vector2<T>& operator+=(const Vector2<T>& other)
     {
         x += other.x;
@@ -59,6 +88,13 @@ public:
         return *this;
     }
 
+    /**
+     * \brief Substract a vector
+     * 
+     * \param other Vector to substract
+     *
+     * \return This vector after substraction
+     */
     Vector2<T>& operator-=(const Vector2<T>& other)
     {
         x -= other.x;
@@ -66,6 +102,13 @@ public:
         return *this;
     }
 
+    /**
+     * \brief Multiply by a scalar
+     * 
+     * \param t Scalar to multiply by
+     *
+     * \return This vector after multiplication
+     */
     Vector2<T>& operator*=(T t)
     {
         x *= t;
@@ -75,26 +118,47 @@ public:
     
     // Other operations
     
+    /**
+     * \brief Get the orthogonal vector
+     *
+     * \return The orthogonal vector
+     */
     Vector2<T> getOrthogonal() const
     {
         return Vector2<T>(-y, x);
     }
 
-    T dot(const Vector2<T>& other) const
-    {
-        return x * other.x + y * other.y;
-    }
-
+    /**
+     * \brief Compute the euclidean norm of the vector
+     *
+     * \return The euclidean norm of the vector
+     */
     T getNorm() const
     {
         return std::sqrt(x * x + y * y);
     }
 
+    /**
+     * \brief Compute the euclidean distance of this point to another point
+     *
+     * In this function vectors are interpreted as points.
+     *
+     * \param other Other point to compute the distance from
+     *
+     * \return The euclidean distance of this point to `other`
+     */
     T getDistance(const Vector2<T>& other) const
     {
         return (*this - other).getNorm();
     }
 
+    /**
+     * \brief Compute the determinant with another vector
+     *
+     * \param other Other vector to compute the determinant with
+     *
+     * \return The determinant of this vector with `other`
+     */
     T getDet(const Vector2<T>& other) const
     {
         return x * other.y - y * other.x;
@@ -103,6 +167,15 @@ public:
 
 // Binary operators
 
+/**
+ * \relates Vector2
+ * \brief Compute the sum of two vectors
+ *
+ * \param lhs First vector
+ * \param rhs Second vector
+ *
+ * \return Sum of these two vectors
+ */
 template<typename T>
 Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs)
 {
@@ -110,6 +183,15 @@ Vector2<T> operator+(Vector2<T> lhs, const Vector2<T>& rhs)
     return lhs;
 }
 
+/**
+ * \relates Vector2
+ * \brief Compute the difference of two vectors
+ *
+ * \param lhs First vector
+ * \param rhs Second vector
+ *
+ * \return Difference of these two vectors
+ */
 template<typename T>
 Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs)
 {
@@ -117,6 +199,15 @@ Vector2<T> operator-(Vector2<T> lhs, const Vector2<T>& rhs)
     return lhs;
 }
 
+/**
+ * \relates Vector2
+ * \brief Compute the product of a scalar by a vector
+ *
+ * \param t Scalar
+ * \param vec Vector
+ *
+ * \return Product of this scalar by this vector
+ */
 template<typename T>
 Vector2<T> operator*(T t, Vector2<T> vec)
 {
@@ -124,12 +215,30 @@ Vector2<T> operator*(T t, Vector2<T> vec)
     return vec;
 }
 
+/**
+ * \relates Vector2
+ * \brief Compute the product of a vector by a scalar
+ *
+ * \param vec Vector
+ * \param t Scalar
+ *
+ * \return Product of this vector by this scalar
+ */
 template<typename T>
 Vector2<T> operator*(Vector2<T> vec, T t)
 {
     return t * vec;
 }
 
+/**
+ * \relates Vector2
+ * \brief Insert a vector in a stream
+ *
+ * \param os Stream in which to insert the vector in
+ * \param vec Vector to insert in the stream
+ *
+ * \return Stream after insertion
+ */
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const Vector2<T>& vec)
 {

@@ -25,6 +25,9 @@
 #include "Box.h"
 #include "Triangulation.h"
 
+/**
+ * \brief Namespace of MyGAL
+ */
 namespace mygal
 {
 
@@ -33,6 +36,8 @@ class FortuneAlgorithm;
 
 /**
  * \brief Data structure representing a partitioning of the space
+ *
+ * \author Pierre Vigier
  */
 template<typename T>
 class Diagram
@@ -99,7 +104,14 @@ public:
 
     // Move operations
 
+    /**
+     * \brief Default move constructor
+     */
     Diagram(Diagram&&) = default;
+
+    /**
+     * \brief Default move assignment operator
+     */
     Diagram& operator=(Diagram&&) = default;
 
     // Accessors
