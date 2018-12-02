@@ -41,6 +41,7 @@ compile_commands.json
 # Build
 build
 
-# Doxygen
+# Documentation
 doc/*
 !doc/Doxyfile
+!goc/mainpage.h
