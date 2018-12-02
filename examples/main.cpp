@@ -22,8 +22,8 @@
 #include <random>
 // SFML
 #include <SFML/Graphics.hpp>
-// My includes
-#include "../include/FortuneAlgorithm.h"
+// MyGAL
+#include <MyGAL/FortuneAlgorithm.h>
 
 using namespace mygal;
 
