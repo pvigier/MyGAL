@@ -13,7 +13,7 @@ For the moment, the library is essentially based on [my implementation of Fortun
 MyGAL is:
 
 * easy to use
-* easy to install (header-only)
+* easy to install (header-only and no external dependency)
 * fast
 * well documented
 * multi-precision
@@ -44,9 +44,9 @@ auto diagram = algorithm.getDiagram(); // Get the constructed diagram
 diagram.intersect(Box<double>{0.0, 0.0, 1.0, 1.0}); // Compute the intersection between the diagram and a box
 ```
 
-Firstly, we bound the diagram then we compute the intersection. The two steps are due to technical details, you can read [this article](https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html) if you want to know more. It is advised to use a box slightly bigger for the bounded step than the one for the intersection step. Otherwise you might face numerical issues.
+Firstly, we bound the diagram then we compute the intersection. The two steps are due to technical details, you can read [this article](https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html) if you want to know more. It is recommended to use a box slightly bigger for the bounded step than the one for the intersection step. Otherwise you might face numerical issues.
 
-Then, you can obtain a Delaunay triangulation:
+You can also obtain a Delaunay triangulation from the diagram:
 
 ```cpp
 auto triangulation = diagram.computeTriangulation();
@@ -70,7 +70,7 @@ The controls of the example are:
 
 ## Known issues
 
-* If several points are aligned horizontally (same y-coordinate), the diagram may be incorrect.
+* If several points are aligned horizontally (exactly the same y-coordinate), the diagram may be incorrect.
 
 ## Documentation
 
@@ -83,4 +83,18 @@ To know more about the implementation you can read some [articles](https://pvigi
 ## License
 
 Distributed under the [GNU Lesser GENERAL PUBLIC LICENSE version 3](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+
+## Images
+
+Voronoi diagram:
+
+![Voronoi diagram](https://github.com/pvigier/MyGAL/raw/master/images/voronoi.png)
+
+Delaunay triangulation:
+
+![Delaunay triangulation](https://github.com/pvigier/MyGAL/raw/master/images/delaunay.png)
+
+Lloyd's relaxation:
+
+![Lloyd's relaxation](https://github.com/pvigier/MyGAL/raw/master/images/lloyd.gif)
 
