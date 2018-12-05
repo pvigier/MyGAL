@@ -92,102 +92,32 @@ public:
      */
     bool bound(Box<T> box)
     {
-        // Make sure the bounding box contains all the vertices
-        for (const auto& vertex : mDiagram.getVertices()) // Much faster when using vector<unique_ptr<Vertex*>, maybe we can test vertices in border cells to speed up
+        // 1. Make sure the bounding box contains all the vertices
+        for (const auto& vertex : mDiagram.getVertices()) // Much faster when using vector<unique_ptr<Vertex*>, maybe we can only test vertices in border cells to speed up
         {
             box.left = std::min(vertex.point.x, box.left);
             box.bottom = std::min(vertex.point.y, box.bottom);
             box.right = std::max(vertex.point.x, box.right);
             box.top = std::max(vertex.point.y, box.top);
         }
-        // Retrieve all non bounded half edges from the beach line
+        // 2. Retrieve all non bounded half edges from the beach line
         auto linkedVertices = std::list<LinkedVertex>();
-        auto vertices = std::unordered_map<std::size_t, std::array<LinkedVertex*, 8>>(mDiagram.getNbSites());
+        auto vertices = VerticeOnFrontierContainer(mDiagram.getNbSites());
         if (!mBeachline.isEmpty())
         {
-            auto leftArc = mBeachline.getLeftmostArc();
-            auto rightArc = leftArc->next;
-            while (!mBeachline.isNil(rightArc))
+            auto arc = mBeachline.getLeftmostArc();
+            while (!mBeachline.isNil(arc->next))
             {
-                // Bound the edge
-                auto direction = (leftArc->site->point - rightArc->site->point).getOrthogonal();
-                auto origin = (leftArc->site->point + rightArc->site->point) * static_cast<T>(0.5);
-                // Line-box intersection
-                auto intersection = box.getFirstIntersection(origin, direction);
-                // Create a new vertex and ends the half edges
-                auto vertex = mDiagram.createVertex(intersection.point);
-                setDestination(leftArc, rightArc, vertex);
-                // Initialize pointers
-                if (vertices.find(leftArc->site->index) == vertices.end()) 
-                    vertices[leftArc->site->index].fill(nullptr); 
-                if (vertices.find(rightArc->site->index) == vertices.end()) 
-                    vertices[rightArc->site->index].fill(nullptr); 
-                // Store the vertex on the boundaries
-                if (vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1])
-                    std::cout << "error" << std::endl;
-                linkedVertices.emplace_back(LinkedVertex{nullptr, vertex, leftArc->rightHalfEdge});
-                vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1] = &linkedVertices.back();
-                if (vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)])
-                    std::cout << "error" << std::endl;
-                linkedVertices.emplace_back(LinkedVertex{rightArc->leftHalfEdge, vertex, nullptr});
-                vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)] = &linkedVertices.back();
-                // Next edge
-                leftArc = rightArc;
-                rightArc = rightArc->next;
+                boundEdge(box, arc, arc->next, linkedVertices, vertices);
+                arc = arc->next;
             }
         }
-        // Add corners
+        // 3. Add corners if necessary
         for (auto& kv : vertices)
-        {
-            auto& cellVertices = kv.second;
-            // We check twice the first side to be sure that all necessary corners are added
-            for (std::size_t i = 0; i < 5; ++i)
-            {
-                auto side = i % 4;
-                auto nextSide = (side + 1) % 4;
-                // Add first corner
-                if (cellVertices[2 * side] == nullptr && cellVertices[2 * side + 1] != nullptr)
-                {
-                    auto prevSide = (side + 3) % 4;
-                    auto corner = mDiagram.createCorner(box, static_cast<typename Box<T>::Side>(side));
-                    linkedVertices.emplace_back(LinkedVertex{nullptr, corner, nullptr});
-                    cellVertices[2 * prevSide + 1] = &linkedVertices.back();
-                    cellVertices[2 * side] = &linkedVertices.back();
-                }
-                // Add second corner
-                else if (cellVertices[2 * side] != nullptr && cellVertices[2 * side + 1] == nullptr)
-                {
-                    auto corner = mDiagram.createCorner(box, static_cast<typename Box<T>::Side>(nextSide));
-                    linkedVertices.emplace_back(LinkedVertex{nullptr, corner, nullptr});
-                    cellVertices[2 * side + 1] = &linkedVertices.back();
-                    cellVertices[2 * nextSide] = &linkedVertices.back();
-                }
-            }
-        }
-        // Join the half edges
+            addCorners(box, linkedVertices, kv.second);
+        // 4. Join the half-edges
         for (auto& kv : vertices)
-        {
-            auto i = kv.first;
-            auto& cellVertices = kv.second;
-            for (std::size_t side = 0; side < 4; ++side)
-            {
-                if (cellVertices[2 * side] != nullptr)
-                {
-                    // Link vertices 
-                    auto halfEdge = mDiagram.createHalfEdge(mDiagram.getFace(i));
-                    halfEdge->origin = cellVertices[2 * side]->vertex;
-                    halfEdge->destination = cellVertices[2 * side + 1]->vertex;
-                    cellVertices[2 * side]->nextHalfEdge = halfEdge;
-                    halfEdge->prev = cellVertices[2 * side]->prevHalfEdge;
-                    if (cellVertices[2 * side]->prevHalfEdge != nullptr)
-                        cellVertices[2 * side]->prevHalfEdge->next = halfEdge;
-                    cellVertices[2 * side + 1]->prevHalfEdge = halfEdge;
-                    halfEdge->next = cellVertices[2 * side + 1]->nextHalfEdge;
-                    if (cellVertices[2 * side + 1]->nextHalfEdge != nullptr)
-                        cellVertices[2 * side + 1]->nextHalfEdge->prev = halfEdge;
-                }
-            }
-        }
+            joinHalfEdges(kv.first, kv.second);
         return true; // TO DO: detect errors
     }
 
@@ -214,7 +144,7 @@ private:
     void handleSiteEvent(Event<T>* event)
     {
         auto site = event->site;
-        // 1. Check if the bachline is empty
+        // 1. Check if the beachline is empty
         if (mBeachline.isEmpty())
         {
             mBeachline.setRoot(mBeachline.createArc(site));
@@ -398,6 +328,84 @@ private:
         typename Diagram<T>::Vertex* vertex;
         typename Diagram<T>::HalfEdge* nextHalfEdge;
     };
+
+    using VerticeOnFrontierContainer = std::unordered_map<std::size_t, std::array<LinkedVertex*, 8>>;
+
+    void boundEdge(const Box<T>& box, Arc<T>* leftArc, Arc<T>* rightArc, std::list<LinkedVertex>& linkedVertices,
+        VerticeOnFrontierContainer& vertices)
+    {
+        // Bound the edge
+        auto direction = (leftArc->site->point - rightArc->site->point).getOrthogonal();
+        auto origin = (leftArc->site->point + rightArc->site->point) * static_cast<T>(0.5);
+        // Line-box intersection
+        auto intersection = box.getFirstIntersection(origin, direction);
+        // Create a new vertex and ends the half edges
+        auto vertex = mDiagram.createVertex(intersection.point);
+        setDestination(leftArc, rightArc, vertex);
+        // Initialize pointers
+        if (vertices.find(leftArc->site->index) == vertices.end()) 
+            vertices[leftArc->site->index].fill(nullptr); 
+        if (vertices.find(rightArc->site->index) == vertices.end()) 
+            vertices[rightArc->site->index].fill(nullptr); 
+        // Store the vertex on the boundaries
+        if (vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1])
+            std::cout << "error" << std::endl;
+        linkedVertices.emplace_back(LinkedVertex{nullptr, vertex, leftArc->rightHalfEdge});
+        vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1] = &linkedVertices.back();
+        if (vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)])
+            std::cout << "error" << std::endl;
+        linkedVertices.emplace_back(LinkedVertex{rightArc->leftHalfEdge, vertex, nullptr});
+        vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)] = &linkedVertices.back();
+    }
+
+    void addCorners(const Box<T>& box, std::list<LinkedVertex>& linkedVertices, std::array<LinkedVertex*, 8>& cellVertices)
+    {
+        // We check twice the first side to be sure that all necessary corners are added
+        for (std::size_t i = 0; i < 5; ++i)
+        {
+            auto side = i % 4;
+            auto nextSide = (side + 1) % 4;
+            // Add first corner
+            if (cellVertices[2 * side] == nullptr && cellVertices[2 * side + 1] != nullptr)
+            {
+                auto prevSide = (side + 3) % 4;
+                auto corner = mDiagram.createCorner(box, static_cast<typename Box<T>::Side>(side));
+                linkedVertices.emplace_back(LinkedVertex{nullptr, corner, nullptr});
+                cellVertices[2 * prevSide + 1] = &linkedVertices.back();
+                cellVertices[2 * side] = &linkedVertices.back();
+            }
+            // Add second corner
+            else if (cellVertices[2 * side] != nullptr && cellVertices[2 * side + 1] == nullptr)
+            {
+                auto corner = mDiagram.createCorner(box, static_cast<typename Box<T>::Side>(nextSide));
+                linkedVertices.emplace_back(LinkedVertex{nullptr, corner, nullptr});
+                cellVertices[2 * side + 1] = &linkedVertices.back();
+                cellVertices[2 * nextSide] = &linkedVertices.back();
+            }
+        }
+    }
+
+    void joinHalfEdges(std::size_t i, std::array<LinkedVertex*, 8>& cellVertices)
+    {
+        for (std::size_t side = 0; side < 4; ++side)
+        {
+            if (cellVertices[2 * side] != nullptr)
+            {
+                // Link vertices 
+                auto halfEdge = mDiagram.createHalfEdge(mDiagram.getFace(i));
+                halfEdge->origin = cellVertices[2 * side]->vertex;
+                halfEdge->destination = cellVertices[2 * side + 1]->vertex;
+                cellVertices[2 * side]->nextHalfEdge = halfEdge;
+                halfEdge->prev = cellVertices[2 * side]->prevHalfEdge;
+                if (cellVertices[2 * side]->prevHalfEdge != nullptr)
+                    cellVertices[2 * side]->prevHalfEdge->next = halfEdge;
+                cellVertices[2 * side + 1]->prevHalfEdge = halfEdge;
+                halfEdge->next = cellVertices[2 * side + 1]->nextHalfEdge;
+                if (cellVertices[2 * side + 1]->nextHalfEdge != nullptr)
+                    cellVertices[2 * side + 1]->nextHalfEdge->prev = halfEdge;
+            }
+        }
+    }
 };
 
 }
