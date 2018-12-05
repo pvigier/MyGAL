@@ -37,19 +37,20 @@ public:
     enum class Type{SITE, CIRCLE};
 
     // Site event
-    Event(typename Diagram<T>::Site* site) : type(Type::SITE), y(site->point.y), index(-1), site(site)
+    Event(typename Diagram<T>::Site* site) : type(Type::SITE), x(site->point.x), y(site->point.y), index(-1), site(site)
     {
 
     }
 
     // Circle event
-    Event(T y, Vector2<T> point, Arc<T>* arc) : type(Type::CIRCLE), y(y), index(-1), point(point), arc(arc)
+    Event(T y, Vector2<T> point, Arc<T>* arc) : type(Type::CIRCLE), x(point.x), y(y), index(-1), point(point), arc(arc)
     {
 
 
     }
 
     const Type type;
+    T x;
     T y;
     int index;
     // Site event
@@ -63,14 +64,14 @@ public:
 template<typename T>
 bool operator<(const Event<T>& lhs, const Event<T>& rhs)
 {
-    return lhs.y < rhs.y;
+    return lhs.y < rhs.y || (lhs.y == rhs.y && lhs.x < rhs.x);
 }
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const Event<T>& event)
 {
     if(event.type == Event<T>::Type::SITE)
-        os << "S(" << event.site->index << ", " << event.y << ")";
+        os << "S(" << event.site->index << ", " << event.site->point << ")";
     else
         os << "C(" << event.arc << ", " << event.y << ", " << event.point << ")";
     return os;
