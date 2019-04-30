@@ -313,7 +313,15 @@ private:
         auto v1 = (point1 - point2).getOrthogonal();
         auto v2 = (point2 - point3).getOrthogonal();
         auto delta = static_cast<T>(0.5) * (point3 - point1);
-        auto t = delta.getDet(v2) / v1.getDet(v2);
+        auto denom = v1.getDet(v2);
+        // If there is no solution (points are aligned)
+        if (almostZero(denom))
+        {
+            y = std::numeric_limits<T>::infinity();
+            return Vector2<T>();
+        }
+        // Otherwise, there is a solution
+        auto t = delta.getDet(v2) / denom;
         auto center = static_cast<T>(0.5) * (point1 + point2) + t * v1;
         auto r = center.getDistance(point1);
         y = center.y - r;
