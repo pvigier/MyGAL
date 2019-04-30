@@ -34,7 +34,7 @@ constexpr Float WINDOW_HEIGHT = 600.0f;
 constexpr Float POINT_RADIUS = 0.005f;
 constexpr Float OFFSET = 1.0f;
 
-// Random generation
+// Points generation
 
 template<typename T>
 std::vector<Vector2<T>> generatePoints(int nbPoints)
@@ -57,7 +57,7 @@ template<typename T>
 void drawPoint(sf::RenderWindow& window, Vector2<T> point, sf::Color color)
 {
     auto shape = sf::CircleShape(POINT_RADIUS);
-    shape.setPosition(sf::Vector2f(point.x - POINT_RADIUS, 1 - point.y - POINT_RADIUS));
+    shape.setPosition(sf::Vector2f(point.x - POINT_RADIUS, 1.0 - point.y - POINT_RADIUS));
     shape.setFillColor(color);
     window.draw(shape);
 }
@@ -67,8 +67,8 @@ void drawEdge(sf::RenderWindow& window, Vector2<T> origin, Vector2<T> destinatio
 {
     sf::Vertex line[] =
     {
-        sf::Vertex(sf::Vector2f(origin.x, 1.0f - origin.y), color),
-        sf::Vertex(sf::Vector2f(destination.x, 1.0f - destination.y), color)
+        sf::Vertex(sf::Vector2f(origin.x, 1.0 - origin.y), color),
+        sf::Vertex(sf::Vector2f(destination.x, 1.0 - destination.y), color)
     };
     window.draw(line, 2, sf::Lines);
 }
@@ -148,11 +148,9 @@ Diagram<T> generateDiagram(const std::vector<Vector2<T>>& points)
 
     // Intersect the diagram with a box
     start = std::chrono::steady_clock::now();
-    bool valid = diagram.intersect(Box<T>{0.0, 0.0, 1.0, 1.0});
+    diagram.intersect(Box<T>{0.0, 0.0, 1.0, 1.0});
     duration = std::chrono::steady_clock::now() - start;
     std::cout << "intersection: " << std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() << "ms" << '\n';
-    if (!valid)
-        throw std::runtime_error("An error occured in the box intersection algorithm");
 
     return diagram;
 }
@@ -196,7 +194,8 @@ int main()
 
         window.clear(sf::Color::Black);
 
-        drawDiagram(window, diagram);
+        if (!showTriangulation)
+            drawDiagram(window, diagram);
         drawPoints(window, diagram);
         if (showTriangulation)
             drawTriangulation(window, diagram, triangulation);
