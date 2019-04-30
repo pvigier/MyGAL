@@ -239,7 +239,7 @@ public:
                 // The edge is going outside the box
                 else if (inside && !nextInside)
                 {
-                    if (nbIntersections == 1)
+                    if (nbIntersections >= 1)
                     {
                         if (processedHalfEdges.find(halfEdge->twin) != processedHalfEdges.end())
                             halfEdge->destination = halfEdge->twin->origin;
@@ -255,7 +255,7 @@ public:
                 // The edge is coming inside the box
                 else if (!inside && nextInside)
                 {
-                    if (nbIntersections == 1)
+                    if (nbIntersections >= 1)
                     {
                         verticesToRemove.emplace(halfEdge->origin);
                         if (processedHalfEdges.find(halfEdge->twin) != processedHalfEdges.end())
