@@ -288,10 +288,11 @@ private:
         auto leftInitialX = getInitialX(left, middle, leftBreakpointMovingRight);
         auto rightInitialX = getInitialX(middle, right, rightBreakpointMovingRight);
         auto isValid =
-            ((leftBreakpointMovingRight && leftInitialX < convergencePoint.x) ||
-            (!leftBreakpointMovingRight && leftInitialX > convergencePoint.x)) &&
-            ((rightBreakpointMovingRight && rightInitialX < convergencePoint.x) ||
-            (!rightBreakpointMovingRight && rightInitialX > convergencePoint.x));
+            !(!leftBreakpointMovingRight && rightBreakpointMovingRight) &&
+            ((leftBreakpointMovingRight && almostLower(leftInitialX, convergencePoint.x)) ||
+            (!leftBreakpointMovingRight && almostGreater(leftInitialX, convergencePoint.x))) &&
+            ((rightBreakpointMovingRight && almostLower(rightInitialX, convergencePoint.x)) ||
+            (!rightBreakpointMovingRight && almostGreater(rightInitialX, convergencePoint.x)));
         if (isValid && isBelow)
         {
             auto event = std::make_unique<Event<T>>(y, convergencePoint, middle);
