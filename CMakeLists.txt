@@ -15,3 +15,11 @@ target_include_directories(mygal INTERFACE include)
 # Examples
 
 add_subdirectory(examples)
+
+# Tests
+
+option (BUILD_TESTING "Build the testing tree." ON)
+if (BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
