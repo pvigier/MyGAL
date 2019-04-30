@@ -19,9 +19,9 @@
 
 // STL
 #include <array>
-#include <limits>
 // My includes
 #include "Vector2.h"
+#include "util.h"
 
 /**
  * \brief Namespace of MyGAL
@@ -52,6 +52,11 @@ public:
     T right;/**< x-coordinate of the right side of the box */
     T top; /**< y-coordinate of the top side of the box */
 
+    bool contains(const Vector2<T>& point) const
+    {
+        return almostBetween(point.x, left, right) && almostBetween(point.y, bottom, top);
+    }
+
 private:
     friend Diagram<T>;
     friend FortuneAlgorithm<T>;
@@ -63,12 +68,6 @@ private:
         Side side;
         Vector2<T> point;
     };
-
-    bool contains(const Vector2<T>& point) const
-    {
-        return point.x >= left - EPSILON && point.x <= right + EPSILON &&
-            point.y >= bottom  - EPSILON && point.y <= top + EPSILON;
-    }
 
     // Useful for Fortune's algorithm
     Intersection getFirstIntersection(const Vector2<T>& origin, const Vector2<T>& direction) const
@@ -113,54 +112,60 @@ private:
     int getIntersections(const Vector2<T>& origin, const Vector2<T>& destination, std::array<Intersection, 2>& intersections) const
     {
         // WARNING: If the intersection is a corner, both intersections are equals
+        // I tried to add this test (i == 0 || !almostEqual(t[0], t[1])) to detect duplicates
+        // But it does not make a big difference
         auto direction = destination - origin;
         auto t = std::array<T, 2>();
         auto i = std::size_t(0); // index of the current intersection
         // Left
-        if (origin.x < left - EPSILON || destination.x < left - EPSILON)
+        if (strictlyLower(origin.x, left) || strictlyLower(destination.x, left))
         {   
             t[i] = (left - origin.x) / direction.x;
-            if (t[i] > EPSILON && t[i] < static_cast<T>(1.0) - EPSILON)  
+            if (strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
                 intersections[i].side = Side::LEFT;
                 intersections[i].point = origin + t[i] * direction;
-                if (intersections[i].point.y >= bottom  - EPSILON && intersections[i].point.y <= top + EPSILON)
+                // Check that the intersection is inside the box
+                if (almostBetween(intersections[i].point.y, bottom, top))
                     ++i;
             }
         }
         // Right
-        if (origin.x > right + EPSILON || destination.x > right + EPSILON)
+        if (strictlyGreater(origin.x, right) || strictlyGreater(destination.x, right))
         {   
             t[i] = (right - origin.x) / direction.x;
-            if (t[i] > EPSILON && t[i] < static_cast<T>(1.0) - EPSILON)  
+            if (strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
                 intersections[i].side = Side::RIGHT;
                 intersections[i].point = origin + t[i] * direction;
-                if (intersections[i].point.y >= bottom - EPSILON && intersections[i].point.y <= top + EPSILON)
+                // Check that the intersection is inside the box
+                if (almostBetween(intersections[i].point.y, bottom, top))
                     ++i;
             }
         }
         // Bottom
-        if (origin.y < bottom - EPSILON || destination.y < bottom - EPSILON)
+        if (strictlyLower(origin.y, bottom) || strictlyLower(destination.y, bottom))
         {   
             t[i] = (bottom - origin.y) / direction.y;
-            if (i < 2 && t[i] > EPSILON && t[i] < static_cast<T>(1.0) - EPSILON)  
+            if (i < 2 && strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
                 intersections[i].side = Side::BOTTOM;
                 intersections[i].point = origin + t[i] * direction;
-                if (intersections[i].point.x >= left  - EPSILON && intersections[i].point.x <= right + EPSILON)
+                // Check that the intersection is inside the box
+                if (almostBetween(intersections[i].point.x, left, right))
                     ++i;
             }
         }
         // Top
-        if (origin.y > top + EPSILON || destination.y > top + EPSILON)
+        if (strictlyGreater(origin.y, top) || strictlyGreater(destination.y, top))
         {   
             t[i] = (top - origin.y) / direction.y;
-            if (i < 2 && t[i] > EPSILON && t[i] < static_cast<T>(1.0) - EPSILON)  
+            if (i < 2 && strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
                 intersections[i].side = Side::TOP;
                 intersections[i].point = origin + t[i] * direction;
-                if (intersections[i].point.x >= left - EPSILON && intersections[i].point.x <= right + EPSILON)
+                // Check that the intersection is inside the box
+                if (almostBetween(intersections[i].point.x, left, right))
                     ++i;
             }
         }
@@ -169,9 +174,6 @@ private:
             std::swap(intersections[0], intersections[1]);
         return i;
     }
-
-private:
-    static constexpr T EPSILON = std::numeric_limits<T>::epsilon();
 };
 
 }
