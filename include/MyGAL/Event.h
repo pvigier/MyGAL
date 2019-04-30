@@ -34,16 +34,16 @@ template<typename T>
 class Event
 {
 public:
-    enum class Type{SITE, CIRCLE};
+    enum class Type{Site, Circle};
 
     // Site event
-    Event(typename Diagram<T>::Site* site) : type(Type::SITE), x(site->point.x), y(site->point.y), index(-1), site(site)
+    Event(typename Diagram<T>::Site* site) : type(Type::Site), x(site->point.x), y(site->point.y), index(-1), site(site)
     {
 
     }
 
     // Circle event
-    Event(T y, Vector2<T> point, Arc<T>* arc) : type(Type::CIRCLE), x(point.x), y(y), index(-1), point(point), arc(arc)
+    Event(T y, Vector2<T> point, Arc<T>* arc) : type(Type::Circle), x(point.x), y(y), index(-1), point(point), arc(arc)
     {
 
 
@@ -70,7 +70,7 @@ bool operator<(const Event<T>& lhs, const Event<T>& rhs)
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const Event<T>& event)
 {
-    if(event.type == Event<T>::Type::SITE)
+    if(event.type == Event<T>::Type::Site)
         os << "S(" << event.site->index << ", " << event.site->point << ")";
     else
         os << "C(" << event.arc << ", " << event.y << ", " << event.point << ")";

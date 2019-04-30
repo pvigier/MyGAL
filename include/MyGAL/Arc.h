@@ -32,8 +32,8 @@ class Event;
 template<typename T>
 struct Arc
 {
-    enum class Color{RED, BLACK};
-    enum class Side{LEFT, RIGHT};
+    enum class Color{Red, Black};
+    enum class Side{Left, Right};
 
     // Hierarchy
     Arc<T>* parent;

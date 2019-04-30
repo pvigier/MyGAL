@@ -61,7 +61,7 @@ private:
     friend Diagram<T>;
     friend FortuneAlgorithm<T>;
 
-    enum class Side : int {LEFT, BOTTOM, RIGHT, TOP};
+    enum class Side : int {Left, Bottom, Right, Top};
 
     struct Intersection
     {
@@ -78,13 +78,13 @@ private:
         if (direction.x > static_cast<T>(0.0))
         {
             t = (right - origin.x) / direction.x;
-            intersection.side = Side::RIGHT;
+            intersection.side = Side::Right;
             intersection.point = origin + t * direction;
         }
         else if (direction.x < static_cast<T>(0.0))
         {
             t = (left - origin.x) / direction.x;
-            intersection.side = Side::LEFT;
+            intersection.side = Side::Left;
             intersection.point = origin + t * direction;
         }
         if (direction.y > static_cast<T>(0.0))
@@ -92,7 +92,7 @@ private:
             auto newT = (top - origin.y) / direction.y;
             if (newT < t)
             {
-                intersection.side = Side::TOP;
+                intersection.side = Side::Top;
                 intersection.point = origin + newT * direction;
             }
         }
@@ -101,7 +101,7 @@ private:
             auto newT = (bottom - origin.y) / direction.y;
             if (newT < t)
             {
-                intersection.side = Side::BOTTOM;
+                intersection.side = Side::Bottom;
                 intersection.point = origin + newT * direction;
             }
         }
@@ -123,7 +123,7 @@ private:
             t[i] = (left - origin.x) / direction.x;
             if (strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
-                intersections[i].side = Side::LEFT;
+                intersections[i].side = Side::Left;
                 intersections[i].point = origin + t[i] * direction;
                 // Check that the intersection is inside the box
                 if (almostBetween(intersections[i].point.y, bottom, top))
@@ -136,7 +136,7 @@ private:
             t[i] = (right - origin.x) / direction.x;
             if (strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
-                intersections[i].side = Side::RIGHT;
+                intersections[i].side = Side::Right;
                 intersections[i].point = origin + t[i] * direction;
                 // Check that the intersection is inside the box
                 if (almostBetween(intersections[i].point.y, bottom, top))
@@ -149,7 +149,7 @@ private:
             t[i] = (bottom - origin.y) / direction.y;
             if (i < 2 && strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
-                intersections[i].side = Side::BOTTOM;
+                intersections[i].side = Side::Bottom;
                 intersections[i].point = origin + t[i] * direction;
                 // Check that the intersection is inside the box
                 if (almostBetween(intersections[i].point.x, left, right))
@@ -162,7 +162,7 @@ private:
             t[i] = (top - origin.y) / direction.y;
             if (i < 2 && strictlyBetween(t[i], static_cast<T>(0.0), static_cast<T>(1.0)))
             {
-                intersections[i].side = Side::TOP;
+                intersections[i].side = Side::Top;
                 intersections[i].point = origin + t[i] * direction;
                 // Check that the intersection is inside the box
                 if (almostBetween(intersections[i].point.x, left, right))

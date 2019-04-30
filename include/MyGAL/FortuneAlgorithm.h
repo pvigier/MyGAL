@@ -73,7 +73,7 @@ public:
         {
             auto event = mEvents.pop();
             mBeachlineY = event->y;
-            if(event->type == Event<T>::Type::SITE)
+            if(event->type == Event<T>::Type::Site)
                 handleSiteEvent(event.get());
             else
                 handleCircleEvent(event.get());
@@ -199,9 +199,9 @@ private:
     {
         // Create the new subtree
         auto middleArc = mBeachline.createArc(site);
-        auto leftArc = mBeachline.createArc(arc->site, Arc<T>::Side::LEFT);
+        auto leftArc = mBeachline.createArc(arc->site, Arc<T>::Side::Left);
         leftArc->leftHalfEdge = arc->leftHalfEdge;
-        auto rightArc = mBeachline.createArc(arc->site, Arc<T>::Side::RIGHT);
+        auto rightArc = mBeachline.createArc(arc->site, Arc<T>::Side::Right);
         rightArc->rightHalfEdge = arc->rightHalfEdge;
         // Insert the subtree in the beachline
         mBeachline.replace(arc, middleArc);

@@ -35,7 +35,7 @@ class Beachline
 public:
     Beachline() : mNil(new Arc<T>), mRoot(mNil)
     {
-        mNil->color = Arc<T>::Color::BLACK; 
+        mNil->color = Arc<T>::Color::Black; 
     }
 
     ~Beachline()
@@ -69,9 +69,9 @@ public:
         other.mRoot = nullptr;
     }
 
-    Arc<T>* createArc(typename Diagram<T>::Site* site, typename Arc<T>::Side side = Arc<T>::Side::LEFT)
+    Arc<T>* createArc(typename Diagram<T>::Site* site, typename Arc<T>::Side side = Arc<T>::Side::Left)
     {
-        return new Arc<T>{mNil, mNil, mNil, site, nullptr, nullptr, nullptr, mNil, mNil, Arc<T>::Color::RED, side};
+        return new Arc<T>{mNil, mNil, mNil, site, nullptr, nullptr, nullptr, mNil, mNil, Arc<T>::Color::Red, side};
     }
     
     bool isEmpty() const
@@ -87,7 +87,7 @@ public:
     void setRoot(Arc<T>* x)
     {
         mRoot = x;
-        mRoot->color = Arc<T>::Color::BLACK;
+        mRoot->color = Arc<T>::Color::Black;
     }
 
     Arc<T>* getLeftmostArc() const
@@ -217,7 +217,7 @@ public:
             y->left->parent = y;
             y->color = z->color;
         }
-        if (yOriginalColor == Arc<T>::Color::BLACK)
+        if (yOriginalColor == Arc<T>::Color::Black)
             removeFixup(x);
         // Update next and prev
         if (!isNil(z->prev))
@@ -266,17 +266,17 @@ private:
 
     void insertFixup(Arc<T>* z)
     {
-        while (z->parent->color == Arc<T>::Color::RED)
+        while (z->parent->color == Arc<T>::Color::Red)
         {
             if (z->parent == z->parent->parent->left)
             {
                 auto y = z->parent->parent->right;
                 // Case 1
-                if (y->color == Arc<T>::Color::RED)
+                if (y->color == Arc<T>::Color::Red)
                 {
-                    z->parent->color = Arc<T>::Color::BLACK;
-                    y->color = Arc<T>::Color::BLACK;
-                    z->parent->parent->color = Arc<T>::Color::RED;
+                    z->parent->color = Arc<T>::Color::Black;
+                    y->color = Arc<T>::Color::Black;
+                    z->parent->parent->color = Arc<T>::Color::Red;
                     z = z->parent->parent;
                 }
                 else
@@ -288,8 +288,8 @@ private:
                         leftRotate(z);
                     }
                     // Case 3
-                    z->parent->color = Arc<T>::Color::BLACK;
-                    z->parent->parent->color = Arc<T>::Color::RED;
+                    z->parent->color = Arc<T>::Color::Black;
+                    z->parent->parent->color = Arc<T>::Color::Red;
                     rightRotate(z->parent->parent);
                 }
             }
@@ -297,11 +297,11 @@ private:
             {
                 auto y = z->parent->parent->left;
                 // Case 1
-                if (y->color == Arc<T>::Color::RED)
+                if (y->color == Arc<T>::Color::Red)
                 {
-                    z->parent->color = Arc<T>::Color::BLACK;
-                    y->color = Arc<T>::Color::BLACK;
-                    z->parent->parent->color = Arc<T>::Color::RED;
+                    z->parent->color = Arc<T>::Color::Black;
+                    y->color = Arc<T>::Color::Black;
+                    z->parent->parent->color = Arc<T>::Color::Red;
                     z = z->parent->parent;
                 }
                 else
@@ -313,50 +313,50 @@ private:
                         rightRotate(z);
                     }
                     // Case 3
-                    z->parent->color = Arc<T>::Color::BLACK;
-                    z->parent->parent->color = Arc<T>::Color::RED;
+                    z->parent->color = Arc<T>::Color::Black;
+                    z->parent->parent->color = Arc<T>::Color::Red;
                     leftRotate(z->parent->parent);
                 }
             }
         }
-        mRoot->color = Arc<T>::Color::BLACK;
+        mRoot->color = Arc<T>::Color::Black;
     }
 
     void removeFixup(Arc<T>* x)
     {
-        while (x != mRoot && x->color == Arc<T>::Color::BLACK)
+        while (x != mRoot && x->color == Arc<T>::Color::Black)
         {
             if (x == x->parent->left)
             {
                 auto w = x->parent->right;
                 // Case 1
-                if (w->color == Arc<T>::Color::RED)
+                if (w->color == Arc<T>::Color::Red)
                 {
-                    w->color = Arc<T>::Color::BLACK;
-                    x->parent->color = Arc<T>::Color::RED;
+                    w->color = Arc<T>::Color::Black;
+                    x->parent->color = Arc<T>::Color::Red;
                     leftRotate(x->parent);
                     w = x->parent->right;
                 }
                 // Case 2
-                if (w->left->color == Arc<T>::Color::BLACK && w->right->color == Arc<T>::Color::BLACK)
+                if (w->left->color == Arc<T>::Color::Black && w->right->color == Arc<T>::Color::Black)
                 {
-                    w->color = Arc<T>::Color::RED;
+                    w->color = Arc<T>::Color::Red;
                     x = x->parent;
                 }
                 else
                 {
                     // Case 3
-                    if (w->right->color == Arc<T>::Color::BLACK)
+                    if (w->right->color == Arc<T>::Color::Black)
                     {
-                        w->left->color = Arc<T>::Color::BLACK;
-                        w->color = Arc<T>::Color::RED;
+                        w->left->color = Arc<T>::Color::Black;
+                        w->color = Arc<T>::Color::Red;
                         rightRotate(w);
                         w = x->parent->right;
                     }
                     // Case 4
                     w->color = x->parent->color;
-                    x->parent->color = Arc<T>::Color::BLACK;
-                    w->right->color = Arc<T>::Color::BLACK;
+                    x->parent->color = Arc<T>::Color::Black;
+                    w->right->color = Arc<T>::Color::Black;
                     leftRotate(x->parent);
                     x = mRoot;
                 }
@@ -365,39 +365,39 @@ private:
             {
                 auto w = x->parent->left;
                 // Case 1
-                if (w->color == Arc<T>::Color::RED)
+                if (w->color == Arc<T>::Color::Red)
                 {
-                    w->color = Arc<T>::Color::BLACK;
-                    x->parent->color = Arc<T>::Color::RED;
+                    w->color = Arc<T>::Color::Black;
+                    x->parent->color = Arc<T>::Color::Red;
                     rightRotate(x->parent);
                     w = x->parent->left;
                 }
                 // Case 2
-                if (w->left->color == Arc<T>::Color::BLACK && w->right->color == Arc<T>::Color::BLACK)
+                if (w->left->color == Arc<T>::Color::Black && w->right->color == Arc<T>::Color::Black)
                 {
-                    w->color = Arc<T>::Color::RED;
+                    w->color = Arc<T>::Color::Red;
                     x = x->parent;
                 }
                 else
                 {
                     // Case 3
-                    if (w->left->color == Arc<T>::Color::BLACK)
+                    if (w->left->color == Arc<T>::Color::Black)
                     {
-                        w->right->color = Arc<T>::Color::BLACK;
-                        w->color = Arc<T>::Color::RED;
+                        w->right->color = Arc<T>::Color::Black;
+                        w->color = Arc<T>::Color::Red;
                         leftRotate(w);
                         w = x->parent->left;
                     }
                     // Case 4
                     w->color = x->parent->color;
-                    x->parent->color = Arc<T>::Color::BLACK;
-                    w->left->color = Arc<T>::Color::BLACK;
+                    x->parent->color = Arc<T>::Color::Black;
+                    w->left->color = Arc<T>::Color::Black;
                     rightRotate(x->parent);
                     x = mRoot;
                 } 
             }
         }
-        x->color = Arc<T>::Color::BLACK;
+        x->color = Arc<T>::Color::Black;
     }
 
     // Rotations
@@ -447,7 +447,7 @@ private:
                 return (x1 + x2) / 2;
             // The breakpoint is at infinity
             else
-                return side == Arc<T>::Side::LEFT ?
+                return side == Arc<T>::Side::Left ?
                     -std::numeric_limits<T>::infinity() :
                     std::numeric_limits<T>::infinity();
         }

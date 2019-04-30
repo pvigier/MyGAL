@@ -397,13 +397,13 @@ private:
     {
         switch (side)
         {
-            case Box<T>::Side::LEFT:
+            case Box<T>::Side::Left:
                 return createVertex(Vector2<T>(box.left, box.top));
-            case Box<T>::Side::BOTTOM:
+            case Box<T>::Side::Bottom:
                 return createVertex(Vector2<T>(box.left, box.bottom));
-            case Box<T>::Side::RIGHT:
+            case Box<T>::Side::Right:
                 return createVertex(Vector2<T>(box.right, box.bottom));
-            case Box<T>::Side::TOP:
+            case Box<T>::Side::Top:
                 return createVertex(Vector2<T>(box.right, box.top));
             default:
                 return nullptr;
