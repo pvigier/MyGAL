@@ -45,3 +45,6 @@ build
 doc/*
 !doc/Doxyfile
 !goc/mainpage.h
+
+# Visual Studio Code
+.vscode/
