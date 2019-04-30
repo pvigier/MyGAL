@@ -25,6 +25,7 @@
 #include "Diagram.h"
 #include "Beachline.h"
 #include "Event.h"
+#include "util.h"
 
 /**
  * \brief Namespace of MyGAL
@@ -281,7 +282,7 @@ private:
     {
         auto y = T();
         auto convergencePoint = computeConvergencePoint(left->site->point, middle->site->point, right->site->point, y);
-        auto isBelow = y <= mBeachlineY;
+        auto isBelow = almostLower(y, mBeachlineY);
         auto leftBreakpointMovingRight = isMovingRight(left, middle);
         auto rightBreakpointMovingRight = isMovingRight(middle, right);
         auto leftInitialX = getInitialX(left, middle, leftBreakpointMovingRight);
