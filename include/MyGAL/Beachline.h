@@ -21,6 +21,7 @@
 #include "Vector2.h"
 #include "Diagram.h"
 #include "Arc.h"
+#include "util.h"
 
 /**
  * \brief Namespace of MyGAL
@@ -439,12 +440,12 @@ private:
     {
         auto x1 = point1.x, y1 = point1.y, x2 = point2.x, y2 = point2.y;
         // Check if the two arcs have the same curvature
-        if (y1 == y2)
+        if (almostEqual(y1, y2))
             return x1 < x2 ? (x1 + x2) / 2 : -std::numeric_limits<T>::infinity();
         // Check if an arc is a ray
-        if (y1 == l)
+        if (almostEqual(y1, l))
             return x1;
-        if (y2 == l)
+        if (almostEqual(y2, l))
             return x2;
         // Otherwise, there are two intersections and we solve a degree two equation
         auto d1 = 1.0 / (2.0 * (y1 - l));
