@@ -33,6 +33,7 @@ template<typename T>
 struct Arc
 {
     enum class Color{RED, BLACK};
+    enum class Side{LEFT, RIGHT};
 
     // Hierarchy
     Arc<T>* parent;
@@ -48,6 +49,8 @@ struct Arc
     Arc<T>* next;
     // Only for balancing
     Color color;
+    // To know if the arc is towards -inf or +inf
+    Side side;
 };
 
 }

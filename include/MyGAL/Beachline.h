@@ -69,9 +69,9 @@ public:
         other.mRoot = nullptr;
     }
 
-    Arc<T>* createArc(typename Diagram<T>::Site* site)
+    Arc<T>* createArc(typename Diagram<T>::Site* site, typename Arc<T>::Side side = Arc<T>::Side::LEFT)
     {
-        return new Arc<T>{mNil, mNil, mNil, site, nullptr, nullptr, nullptr, mNil, mNil, Arc<T>::Color::RED};
+        return new Arc<T>{mNil, mNil, mNil, site, nullptr, nullptr, nullptr, mNil, mNil, Arc<T>::Color::RED, side};
     }
     
     bool isEmpty() const
@@ -107,9 +107,9 @@ public:
             auto breakpointLeft = -std::numeric_limits<T>::infinity();
             auto breakpointRight = std::numeric_limits<T>::infinity();
             if (!isNil(node->prev))
-               breakpointLeft =  computeBreakpoint(node->prev->site->point, node->site->point, l);
+               breakpointLeft =  computeBreakpoint(node->prev->site->point, node->site->point, l, node->prev->side);
             if (!isNil(node->next))
-                breakpointRight = computeBreakpoint(node->site->point, node->next->site->point, l);
+                breakpointRight = computeBreakpoint(node->site->point, node->next->site->point, l, node->next->side);
             if (point.x < breakpointLeft)
                 node = node->left;
             else if (point.x > breakpointRight)
@@ -436,12 +436,21 @@ private:
         y->parent = x;
     }
 
-    T computeBreakpoint(const Vector2<T>& point1, const Vector2<T>& point2, T l) const
+    T computeBreakpoint(const Vector2<T>& point1, const Vector2<T>& point2, T l, typename Arc<T>::Side side) const
     {
         auto x1 = point1.x, y1 = point1.y, x2 = point2.x, y2 = point2.y;
         // Check if the two arcs have the same curvature
         if (almostEqual(y1, y2))
-            return x1 < x2 ? (x1 + x2) / 2 : -std::numeric_limits<T>::infinity();
+        {
+            // The breakpoint is between the two points
+            if (x1 < x2)
+                return (x1 + x2) / 2;
+            // The breakpoint is at infinity
+            else
+                return side == Arc<T>::Side::LEFT ?
+                    -std::numeric_limits<T>::infinity() :
+                    std::numeric_limits<T>::infinity();
+        }
         // Check if an arc is a ray
         if (almostEqual(y1, l))
             return x1;

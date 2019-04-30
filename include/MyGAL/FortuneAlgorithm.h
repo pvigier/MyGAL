@@ -199,9 +199,9 @@ private:
     {
         // Create the new subtree
         auto middleArc = mBeachline.createArc(site);
-        auto leftArc = mBeachline.createArc(arc->site);
+        auto leftArc = mBeachline.createArc(arc->site, Arc<T>::Side::LEFT);
         leftArc->leftHalfEdge = arc->leftHalfEdge;
-        auto rightArc = mBeachline.createArc(arc->site);
+        auto rightArc = mBeachline.createArc(arc->site, Arc<T>::Side::RIGHT);
         rightArc->rightHalfEdge = arc->rightHalfEdge;
         // Insert the subtree in the beachline
         mBeachline.replace(arc, middleArc);
