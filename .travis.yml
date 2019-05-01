@@ -1,0 +1,18 @@
+language: cpp
+os: linux
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-7
+
+before-install:
+  - eval "CC=gcc-7 && CXX=g++-7"
+
+script:
+  - mkdir build
+  - cd build
+  - cmake .. -DBUILD_EXAMPLES=OFF
+  - make

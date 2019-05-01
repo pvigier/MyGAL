@@ -14,7 +14,10 @@ target_include_directories(mygal INTERFACE include)
 
 # Examples
 
-add_subdirectory(examples)
+option (BUILD_EXAMPLES "Build the examples." ON)
+if (BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 # Tests
 
