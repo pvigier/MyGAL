@@ -14,5 +14,12 @@ before_install:
 script:
   - mkdir build
   - cd build
-  - cmake .. -DBUILD_EXAMPLES=OFF
+  - cmake .. -DBUILD_EXAMPLES=OFF -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug
   - make
+  - ctest
+
+after_success:
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.info '/usr/*' '*/tests/*' --output-file coverage.info
+  - lcov --list coverage.info
+  - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
