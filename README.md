@@ -1,5 +1,10 @@
 # MyGAL
 
+[![Build Status](https://travis-ci.org/pvigier/MyGAL.svg?branch=master)](https://travis-ci.org/pvigier/MyGAL)
+[![codecov](https://codecov.io/gh/pvigier/MyGAL/branch/master/graph/badge.svg)](https://codecov.io/gh/pvigier/MyGAL)
+
+
+
 MyGAL is a computational geometry algorithms library.
 
 ## Features
