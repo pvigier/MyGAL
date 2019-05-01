@@ -46,7 +46,6 @@ public:
     Event(T y, Vector2<T> point, Arc<T>* arc) : type(Type::Circle), x(point.x), y(y), index(-1), point(point), arc(arc)
     {
 
-
     }
 
     const Type type;
@@ -70,7 +69,7 @@ bool operator<(const Event<T>& lhs, const Event<T>& rhs)
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const Event<T>& event)
 {
-    if(event.type == Event<T>::Type::Site)
+    if (event.type == Event<T>::Type::Site)
         os << "S(" << event.site->index << ", " << event.site->point << ")";
     else
         os << "C(" << event.arc << ", " << event.y << ", " << event.point << ")";

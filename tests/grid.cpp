@@ -28,9 +28,9 @@ std::vector<Vector2<T>> getGrid(std::size_t m, std::size_t n)
     auto points = std::vector<Vector2<T>>(m * n);
     auto dx = static_cast<T>(1.0) / (m + 1);
     auto dy = static_cast<T>(1.0) / (n + 1);
-    for (std::size_t i = 0; i < n; ++i)
+    for (auto i = std::size_t(0); i < n; ++i)
     {
-        for (std::size_t j = 0; j < m; ++j)
+        for (auto j = std::size_t(0); j < m; ++j)
             points[i * m + j] = Vector2<T>((j + 1) * dx, (i + 1) * dy);
     }
     return points;

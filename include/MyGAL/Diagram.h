@@ -340,14 +340,14 @@ public:
     Triangulation computeTriangulation() const
     {
         auto neighbors = std::vector<std::vector<std::size_t>>(mSites.size());
-        for (std::size_t i = 0; i < mSites.size(); ++i)
+        for (auto i = std::size_t(0); i < mSites.size(); ++i)
         {
             auto face = mFaces[i];
             auto halfEdge = face.outerComponent;
             while (halfEdge->prev != nullptr)
             {
                 halfEdge = halfEdge->prev;
-                if(halfEdge == face.outerComponent)
+                if (halfEdge == face.outerComponent)
                     break;
             }
             while (halfEdge != nullptr)
@@ -355,7 +355,7 @@ public:
                 if (halfEdge->twin != nullptr)
                     neighbors[i].push_back(halfEdge->twin->incidentFace->site->index);
                 halfEdge = halfEdge->next;
-                if(halfEdge == face.outerComponent)
+                if (halfEdge == face.outerComponent)
                     break;
             }
         }
@@ -374,7 +374,7 @@ private:
     {
         mSites.reserve(points.size());
         mFaces.reserve(points.size());
-        for(std::size_t i = 0; i < points.size(); ++i)
+        for (auto i = std::size_t(0); i < points.size(); ++i)
         {
             mSites.push_back(Diagram::Site{i, points[i], nullptr});
             mFaces.push_back(Diagram::Face{&mSites.back(), nullptr});
@@ -415,7 +415,7 @@ private:
         mHalfEdges.emplace_back();
         mHalfEdges.back().incidentFace = face;
         mHalfEdges.back().it = std::prev(mHalfEdges.end());
-        if(face->outerComponent == nullptr)
+        if (face->outerComponent == nullptr)
             face->outerComponent = &mHalfEdges.back();
         return &mHalfEdges.back();
     }

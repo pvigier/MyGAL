@@ -29,7 +29,7 @@ template<typename T>
 std::vector<Vector2<T>> getCircle(std::size_t n)
 {
     auto points = std::vector<Vector2<T>>(n);
-    for (std::size_t i = 0; i < n; ++i)
+    for (auto i = std::size_t(0); i < n; ++i)
     {
         auto angle = 2.0 * PI * static_cast<T>(i) / static_cast<T>(n);
         points[i] = Vector2<T>((std::cos(angle) + 1.0) / 2.0, (1.0 + std::sin(angle)) / 2.0);

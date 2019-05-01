@@ -26,7 +26,7 @@ std::vector<Vector2<T>> getAlignedPoints(std::size_t n)
 {
     auto points = std::vector<Vector2<T>>(n);
     auto dx = static_cast<T>(1.0) / (n + 1);
-    for (std::size_t i = 0; i < n; ++i)
+    for (auto i = std::size_t(0); i < n; ++i)
         points[i] = Vector2<T>((i + 1) * dx, 0.5);
     return points;
 }

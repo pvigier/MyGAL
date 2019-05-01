@@ -29,10 +29,10 @@ using namespace mygal;
 
 using Float = double;
 
-constexpr Float WINDOW_WIDTH = 600.0f;
-constexpr Float WINDOW_HEIGHT = 600.0f;
-constexpr Float POINT_RADIUS = 0.005f;
-constexpr Float OFFSET = 1.0f;
+constexpr Float WindowWidth = 600.0f;
+constexpr Float WindowHeight = 600.0f;
+constexpr Float PointRadius = 0.005f;
+constexpr Float Offset = 1.0f;
 
 // Points generation
 
@@ -56,8 +56,8 @@ std::vector<Vector2<T>> generatePoints(int nbPoints)
 template<typename T>
 void drawPoint(sf::RenderWindow& window, Vector2<T> point, sf::Color color)
 {
-    auto shape = sf::CircleShape(POINT_RADIUS);
-    shape.setPosition(sf::Vector2f(point.x - POINT_RADIUS, 1.0 - point.y - POINT_RADIUS));
+    auto shape = sf::CircleShape(PointRadius);
+    shape.setPosition(sf::Vector2f(point.x - PointRadius, 1.0 - point.y - PointRadius));
     shape.setFillColor(color);
     window.draw(shape);
 }
@@ -65,25 +65,25 @@ void drawPoint(sf::RenderWindow& window, Vector2<T> point, sf::Color color)
 template<typename T>
 void drawEdge(sf::RenderWindow& window, Vector2<T> origin, Vector2<T> destination, sf::Color color)
 {
-    sf::Vertex line[] =
+    auto line = std::array<sf::Vertex, 2>
     {
         sf::Vertex(sf::Vector2f(origin.x, 1.0 - origin.y), color),
         sf::Vertex(sf::Vector2f(destination.x, 1.0 - destination.y), color)
     };
-    window.draw(line, 2, sf::Lines);
+    window.draw(line.data(), 2, sf::Lines);
 }
 
 template<typename T>
 void drawPoints(sf::RenderWindow& window, Diagram<T>& diagram)
 {
-    for (std::size_t i = 0; i < diagram.getNbSites(); ++i)
+    for (auto i = std::size_t(0); i < diagram.getNbSites(); ++i)
         drawPoint(window, diagram.getSite(i)->point, sf::Color(100, 250, 50));
 }
 
 template<typename T>
 void drawDiagram(sf::RenderWindow& window, Diagram<T>& diagram)
 {
-    for (std::size_t i = 0; i < diagram.getNbSites(); ++i)
+    for (auto i = std::size_t(0); i < diagram.getNbSites(); ++i)
     {
         auto site = diagram.getSite(i);
         auto center = site->point;
@@ -102,8 +102,8 @@ void drawDiagram(sf::RenderWindow& window, Diagram<T>& diagram)
         {
             if (halfEdge->origin != nullptr && halfEdge->destination != nullptr)
             {
-                auto origin = (halfEdge->origin->point - center) * OFFSET + center;
-                auto destination = (halfEdge->destination->point - center) * OFFSET + center;
+                auto origin = (halfEdge->origin->point - center) * Offset + center;
+                auto destination = (halfEdge->destination->point - center) * Offset + center;
                 drawEdge(window, origin, destination, sf::Color::Red);
             }
             halfEdge = halfEdge->next;
@@ -116,10 +116,10 @@ void drawDiagram(sf::RenderWindow& window, Diagram<T>& diagram)
 template<typename T>
 void drawTriangulation(sf::RenderWindow& window, Diagram<T>& diagram, Triangulation& triangulation)
 {
-    for(size_t i = 0; i < diagram.getNbSites(); ++i)
+    for (auto i = std::size_t(0); i < diagram.getNbSites(); ++i)
     {
         auto origin = diagram.getSite(i)->point;
-        for(const auto& j : triangulation.getNeighbors(i))
+        for (const auto& j : triangulation.getNeighbors(i))
         {
             auto destination = diagram.getSite(j)->point;
             drawEdge(window, origin, destination, sf::Color::Green);
@@ -162,15 +162,16 @@ int main()
     auto triangulation = diagram.computeTriangulation();
 
     // Display the diagram
-    sf::ContextSettings settings;
+    auto settings = sf::ContextSettings();
     settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Fortune's algorithm", sf::Style::Default, settings);
+    sf::RenderWindow window(sf::VideoMode(WindowWidth, WindowHeight), "MyGAL", sf::Style::Default, settings); // Can use auto only in C++17
     window.setView(sf::View(sf::FloatRect(-0.1f, -0.1f, 1.2f, 1.2f)));
-    bool showTriangulation = false;
+    window.setFramerateLimit(60);
+    auto showTriangulation = false;
 
     while (window.isOpen())
     {
-        sf::Event event;
+        auto event = sf::Event();
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)

@@ -64,7 +64,7 @@ public:
     void update(std::size_t i)
     {
         auto parent = getParent(i);
-        if(parent >= 0 && *mElements[parent] < *mElements[i])
+        if (parent >= 0 && *mElements[parent] < *mElements[i])
             siftUp(i);
         else
             siftDown(i);
@@ -82,7 +82,7 @@ public:
 
     std::ostream& print(std::ostream& os, int i = 0, std::string tabs = "") const
     {
-        if(i < mElements.size())
+        if (i < mElements.size())
         {
             os << tabs << *mElements[i] << std::endl;
             display(getLeftChild(i), tabs + '\t');
@@ -118,11 +118,11 @@ private:
         auto left = getLeftChild(i);
         auto right = getRightChild(i);
         auto j = i;
-        if(left < mElements.size() && *mElements[j] < *mElements[left])
+        if (left < mElements.size() && *mElements[j] < *mElements[left])
             j = left;
-        if(right < mElements.size() && *mElements[j] < *mElements[right])
+        if (right < mElements.size() && *mElements[j] < *mElements[right])
             j = right;
-        if(j != i)
+        if (j != i)
         {
             swap(i, j);
             siftDown(j);
@@ -132,7 +132,7 @@ private:
     void siftUp(std::size_t i)
     {
         auto parent = getParent(i);
-        if(parent >= 0 && *mElements[parent] < *mElements[i])
+        if (parent >= 0 && *mElements[parent] < *mElements[i])
         {
             swap(i, parent);
             siftUp(parent);

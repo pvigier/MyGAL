@@ -65,7 +65,7 @@ public:
     void construct()
     {
         // Initialize event queue
-        for (std::size_t i = 0; i < mDiagram.getNbSites(); ++i)
+        for (auto i = std::size_t(0); i < mDiagram.getNbSites(); ++i)
             mEvents.push(std::make_unique<Event<T>>(mDiagram.getSite(i)));
 
         // Process events
@@ -73,7 +73,7 @@ public:
         {
             auto event = mEvents.pop();
             mBeachlineY = event->y;
-            if(event->type == Event<T>::Type::Site)
+            if (event->type == Event<T>::Type::Site)
                 handleSiteEvent(event.get());
             else
                 handleCircleEvent(event.get());
@@ -371,7 +371,7 @@ private:
     void addCorners(const Box<T>& box, std::list<LinkedVertex>& linkedVertices, std::array<LinkedVertex*, 8>& cellVertices)
     {
         // We check twice the first side to be sure that all necessary corners are added
-        for (std::size_t i = 0; i < 5; ++i)
+        for (auto i = std::size_t(0); i < 5; ++i)
         {
             auto side = i % 4;
             auto nextSide = (side + 1) % 4;
@@ -397,7 +397,7 @@ private:
 
     void joinHalfEdges(std::size_t i, std::array<LinkedVertex*, 8>& cellVertices)
     {
-        for (std::size_t side = 0; side < 4; ++side)
+        for (auto side = std::size_t(0); side < 4; ++side)
         {
             if (cellVertices[2 * side] != nullptr)
             {
