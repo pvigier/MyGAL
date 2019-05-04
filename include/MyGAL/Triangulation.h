@@ -39,7 +39,7 @@ public:
      *
      * \param neighbors Neighbors for each vertex of the triangulation
      */
-    Triangulation(std::vector<std::vector<std::size_t>> neighbors) : mNeighbors(std::move(neighbors))
+    explicit Triangulation(std::vector<std::vector<std::size_t>> neighbors) : mNeighbors(std::move(neighbors))
     {
 
     }

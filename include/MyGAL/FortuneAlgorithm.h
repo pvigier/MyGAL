@@ -50,7 +50,7 @@ public:
      *
      * \param points Coordinates of the sites that will be used to generate the Voronoi diagram
      */
-    FortuneAlgorithm(std::vector<Vector2<T>> points) : mDiagram(std::move(points))
+    explicit FortuneAlgorithm(std::vector<Vector2<T>> points) : mDiagram(std::move(points))
     {
 
     }

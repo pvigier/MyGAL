@@ -37,7 +37,7 @@ public:
     enum class Type{Site, Circle};
 
     // Site event
-    Event(typename Diagram<T>::Site* site) : type(Type::Site), x(site->point.x), y(site->point.y), index(-1), site(site)
+    explicit Event(typename Diagram<T>::Site* site) : type(Type::Site), x(site->point.x), y(site->point.y), index(-1), site(site)
     {
 
     }
