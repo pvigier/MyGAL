@@ -18,7 +18,7 @@
 #pragma once
 
 // STL
-#include <ostream>
+#include <iosfwd>
 #include <cmath>
 
 /**
