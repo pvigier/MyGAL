@@ -19,7 +19,6 @@
 
 // STL
 #include <unordered_map>
-#include <iostream>
 // My includes
 #include "PriorityQueue.h"
 #include "Diagram.h"
@@ -90,9 +89,12 @@ public:
      * one passed as parameter.
      *
      * \param box Smallest box to use for bounding
+     * 
+     * \return True if no error occurs during intersection, false otherwise
      */
     bool bound(Box<T> box)
     {
+        auto success = true;
         // 1. Make sure the bounding box contains all the vertices
         for (const auto& vertex : mDiagram.getVertices()) // Much faster when using vector<unique_ptr<Vertex*>, maybe we can only test vertices in border cells to speed up
         {
@@ -109,17 +111,18 @@ public:
             auto arc = mBeachline.getLeftmostArc();
             while (!mBeachline.isNil(arc->next))
             {
-                boundEdge(box, arc, arc->next, linkedVertices, vertices);
+                success = boundEdge(box, arc, arc->next, linkedVertices, vertices) && success;
                 arc = arc->next;
             }
         }
         // 3. Add corners if necessary
         for (auto& kv : vertices)
-            addCorners(box, linkedVertices, kv.second);
+            success = addCorners(box, linkedVertices, kv.second) && success;
         // 4. Join the half-edges
         for (auto& kv : vertices)
             joinHalfEdges(kv.first, kv.second);
-        return true; // TO DO: detect errors
+        // Return the status
+        return success;
     }
 
     /**
@@ -341,9 +344,10 @@ private:
 
     using VerticeOnFrontierContainer = std::unordered_map<std::size_t, std::array<LinkedVertex*, 8>>;
 
-    void boundEdge(const Box<T>& box, Arc<T>* leftArc, Arc<T>* rightArc, std::list<LinkedVertex>& linkedVertices,
+    bool boundEdge(const Box<T>& box, Arc<T>* leftArc, Arc<T>* rightArc, std::list<LinkedVertex>& linkedVertices,
         VerticeOnFrontierContainer& vertices)
     {
+        auto success = true;
         // Bound the edge
         auto direction = (leftArc->site->point - rightArc->site->point).getOrthogonal();
         auto origin = (leftArc->site->point + rightArc->site->point) * static_cast<T>(0.5);
@@ -357,19 +361,21 @@ private:
             vertices[leftArc->site->index].fill(nullptr); 
         if (vertices.find(rightArc->site->index) == vertices.end()) 
             vertices[rightArc->site->index].fill(nullptr); 
-        // Store the vertex on the boundaries
-        if (vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1])
-            std::cout << "error" << std::endl;
+        // Check that the vertices are not already assigned
+        success = vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1] == nullptr && success;
+        success = vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)] == nullptr && success;
+        // Store the vertices on the boundaries
         linkedVertices.emplace_back(LinkedVertex{nullptr, vertex, leftArc->rightHalfEdge});
         vertices[leftArc->site->index][2 * static_cast<int>(intersection.side) + 1] = &linkedVertices.back();
-        if (vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)])
-            std::cout << "error" << std::endl;
         linkedVertices.emplace_back(LinkedVertex{rightArc->leftHalfEdge, vertex, nullptr});
         vertices[rightArc->site->index][2 * static_cast<int>(intersection.side)] = &linkedVertices.back();
+        // Return the status
+        return success;
     }
 
-    void addCorners(const Box<T>& box, std::list<LinkedVertex>& linkedVertices, std::array<LinkedVertex*, 8>& cellVertices)
+    bool addCorners(const Box<T>& box, std::list<LinkedVertex>& linkedVertices, std::array<LinkedVertex*, 8>& cellVertices)
     {
+        auto success = true;
         // We check twice the first side to be sure that all necessary corners are added
         for (auto i = std::size_t(0); i < 5; ++i)
         {
@@ -381,6 +387,9 @@ private:
                 auto prevSide = (side + 3) % 4;
                 auto corner = mDiagram.createCorner(box, static_cast<typename Box<T>::Side>(side));
                 linkedVertices.emplace_back(LinkedVertex{nullptr, corner, nullptr});
+                // Check that we are not erasing an already assigned vertex
+                success = cellVertices[2 * prevSide + 1] == nullptr && success;
+                // Store the vertex on the boundary
                 cellVertices[2 * prevSide + 1] = &linkedVertices.back();
                 cellVertices[2 * side] = &linkedVertices.back();
             }
@@ -389,10 +398,15 @@ private:
             {
                 auto corner = mDiagram.createCorner(box, static_cast<typename Box<T>::Side>(nextSide));
                 linkedVertices.emplace_back(LinkedVertex{nullptr, corner, nullptr});
+                // Check that we are not erasing an already assigned vertex
+                success = cellVertices[2 * nextSide] == nullptr && success;
+                // Store the vertex on the boundary
                 cellVertices[2 * side + 1] = &linkedVertices.back();
                 cellVertices[2 * nextSide] = &linkedVertices.back();
             }
         }
+        // Return the status
+        return success;
     }
 
     void joinHalfEdges(std::size_t i, std::array<LinkedVertex*, 8>& cellVertices)

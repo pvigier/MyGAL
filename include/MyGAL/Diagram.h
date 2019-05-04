@@ -201,7 +201,7 @@ public:
      */
     bool intersect(Box<T> box)
     {
-        auto error = false;
+        auto success = true;
         auto processedHalfEdges = std::unordered_set<HalfEdge*>();
         auto verticesToRemove = std::unordered_set<Vertex*>();
         for (const auto& site : mSites)
@@ -254,7 +254,7 @@ public:
                         processedHalfEdges.emplace(halfEdge);
                     }
                     else
-                        error = true;
+                        success = false;
                 }
                 // The edge is going outside the box
                 else if (inside && !nextInside)
@@ -270,7 +270,7 @@ public:
                         processedHalfEdges.emplace(halfEdge);
                     }
                     else
-                        error = true;
+                        success = false;
                 }
                 // The edge is coming inside the box
                 else if (!inside && nextInside)
@@ -292,7 +292,7 @@ public:
                         processedHalfEdges.emplace(halfEdge);
                     }
                     else
-                        error = true;
+                        success = false;
                 }
                 halfEdge = nextHalfEdge;
                 // Update inside
@@ -309,7 +309,7 @@ public:
         for (auto& vertex : verticesToRemove)
             removeVertex(vertex);
         // Return the status
-        return !error;
+        return success;
     }
 
     // Lloyd's relaxation

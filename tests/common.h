@@ -62,13 +62,14 @@ mygal::Diagram<T> generateDiagram(const std::vector<mygal::Vector2<T>>& points)
     algorithm.construct();
 
     // Bound the diagram
-    algorithm.bound(mygal::Box<T>{-0.05, -0.05, 1.05, 1.05});
+    auto success = algorithm.bound(mygal::Box<T>{-0.05, -0.05, 1.05, 1.05});
+    assert(success);
     auto diagram = algorithm.getDiagram();
     assert(isBounded(diagram));
 
     // Intersect the diagram with a box
     auto box = mygal::Box<T>{0.0, 0.0, 1.0, 1.0};
-    bool success = diagram.intersect(box);
+    success = diagram.intersect(box);
     assert(success);
     assert(isIntersectionValid(diagram, box));
 
