@@ -259,6 +259,7 @@ public:
                 // The edge is going outside the box
                 else if (inside && !nextInside)
                 {
+                    // We accept >= 1 as a corner can be found twice
                     if (nbIntersections >= 1)
                     {
                         if (processedHalfEdges.find(halfEdge->twin) != processedHalfEdges.end())
@@ -275,6 +276,7 @@ public:
                 // The edge is coming inside the box
                 else if (!inside && nextInside)
                 {
+                    // We accept >= 1 as a corner can be found twice
                     if (nbIntersections >= 1)
                     {
                         verticesToRemove.emplace(halfEdge->origin);
@@ -331,6 +333,7 @@ public:
             auto area = static_cast<T>(0.0);
             auto centroid = Vector2<T>();
             auto halfEdge = face.outerComponent;
+            // Compute centroid of the face
             do
             {
                 auto det = halfEdge->origin->point.getDet(halfEdge->destination->point);

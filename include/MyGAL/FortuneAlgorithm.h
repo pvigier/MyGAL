@@ -285,18 +285,21 @@ private:
     {
         auto y = T();
         auto convergencePoint = computeConvergencePoint(left->site->point, middle->site->point, right->site->point, y);
-        auto isBelow = almostLower(y, mBeachlineY);
+        // Check that the bottom of the circle is below the beachline
+        if (!almostLower(y, mBeachlineY))
+            return;
+        // Check that the event is valid by checking that the middle arc will indeed shrink
+        // To do that we check in which direction the breakpoint are moving and that the
+        // convergence point is somewhere the breakpoints are moving to
         auto leftBreakpointMovingRight = isMovingRight(left, middle);
         auto rightBreakpointMovingRight = isMovingRight(middle, right);
         auto leftInitialX = getInitialX(left, middle, leftBreakpointMovingRight);
         auto rightInitialX = getInitialX(middle, right, rightBreakpointMovingRight);
-        auto isValid =
-            !(!leftBreakpointMovingRight && rightBreakpointMovingRight) &&
+        if (!(!leftBreakpointMovingRight && rightBreakpointMovingRight) &&
             ((leftBreakpointMovingRight && almostLower(leftInitialX, convergencePoint.x)) ||
             (!leftBreakpointMovingRight && almostGreater(leftInitialX, convergencePoint.x))) &&
             ((rightBreakpointMovingRight && almostLower(rightInitialX, convergencePoint.x)) ||
-            (!rightBreakpointMovingRight && almostGreater(rightInitialX, convergencePoint.x)));
-        if (isValid && isBelow)
+            (!rightBreakpointMovingRight && almostGreater(rightInitialX, convergencePoint.x))))
         {
             auto event = std::make_unique<Event<T>>(y, convergencePoint, middle);
             middle->event = event.get();
@@ -322,6 +325,7 @@ private:
         // If there is no solution (points are aligned)
         if (almostZero(denom))
         {
+            // Infinity means that the event will never be added to the event queue
             y = std::numeric_limits<T>::infinity();
             return Vector2<T>();
         }
@@ -413,6 +417,9 @@ private:
     {
         for (auto side = std::size_t(0); side < 4; ++side)
         {
+            // After addCorners have been executed either both cellVertices[2 * side]
+            // and cellVertices[2 * side + 1] are assigned or both are nullptr
+            // Maybe we can add an assertion to check that
             if (cellVertices[2 * side] != nullptr)
             {
                 // Link vertices 
