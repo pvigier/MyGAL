@@ -74,20 +74,19 @@ void drawEdge(sf::RenderWindow& window, Vector2<T> origin, Vector2<T> destinatio
 }
 
 template<typename T>
-void drawPoints(sf::RenderWindow& window, Diagram<T>& diagram)
+void drawPoints(sf::RenderWindow& window, const Diagram<T>& diagram)
 {
-    for (auto i = std::size_t(0); i < diagram.getNbSites(); ++i)
-        drawPoint(window, diagram.getSite(i)->point, sf::Color(100, 250, 50));
+    for (const auto& site : diagram.getSites())
+        drawPoint(window, site.point, sf::Color(100, 250, 50));
 }
 
 template<typename T>
-void drawDiagram(sf::RenderWindow& window, Diagram<T>& diagram)
+void drawDiagram(sf::RenderWindow& window, const Diagram<T>& diagram)
 {
-    for (auto i = std::size_t(0); i < diagram.getNbSites(); ++i)
+    for (const auto& site : diagram.getSites())
     {
-        auto site = diagram.getSite(i);
-        auto center = site->point;
-        auto face = site->face;
+        auto center = site.point;
+        auto face = site.face;
         auto halfEdge = face->outerComponent;
         if (halfEdge == nullptr)
             continue;
@@ -114,7 +113,7 @@ void drawDiagram(sf::RenderWindow& window, Diagram<T>& diagram)
 }
 
 template<typename T>
-void drawTriangulation(sf::RenderWindow& window, Diagram<T>& diagram, Triangulation& triangulation)
+void drawTriangulation(sf::RenderWindow& window, const Diagram<T>& diagram, const Triangulation& triangulation)
 {
     for (auto i = std::size_t(0); i < diagram.getNbSites(); ++i)
     {

@@ -117,13 +117,23 @@ public:
     // Accessors
 
     /**
+     * \brief Get sites
+     * 
+     * \return Const reference to the vector of sites of the diagram
+     */
+    const std::vector<Site>& getSites() const
+    {
+        return mSites;
+    }
+
+    /**
      * \brief Get a site
      *
      * \param i Index of the requested site
      *
-     * \return Pointer to the requested site
+     * \return Const pointer to the requested site
      */
-    Site* getSite(std::size_t i)
+    const Site* getSite(std::size_t i) const
     {
         return &mSites[i];
     }
@@ -139,13 +149,23 @@ public:
     }
 
     /**
+     * \brief Get faces
+     * 
+     * \return Const reference to the vector of faces of the diagram
+     */
+    const std::vector<Face>& getFaces() const
+    {
+        return mFaces;
+    }
+
+    /**
      * \brief Get a face
      *
      * \param i Index of the site associated with the requested face
      *
-     * \return Pointer to the requested face
+     * \return Const pointer to the requested face
      */
-    Face* getFace(std::size_t i)
+    const Face* getFace(std::size_t i) const
     {
         return &mFaces[i];
     }
@@ -370,6 +390,9 @@ private:
 
     // Diagram construction
 
+    template<typename>
+    friend class FortuneAlgorithm;
+
     Diagram(const std::vector<Vector2<T>>& points)
     {
         mSites.reserve(points.size());
@@ -382,8 +405,15 @@ private:
         }
     }
 
-    template<typename>
-    friend class FortuneAlgorithm;
+    Site* getSite(std::size_t i)
+    {
+        return &mSites[i];
+    }
+
+    Face* getFace(std::size_t i)
+    {
+        return &mFaces[i];
+    }
 
     Vertex* createVertex(Vector2<T> point)
     {

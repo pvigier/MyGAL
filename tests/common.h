@@ -21,19 +21,18 @@
 // Tests
 
 template<typename T>
-bool isBounded(mygal::Diagram<T>& diagram)
+bool isBounded(const mygal::Diagram<T>& diagram)
 {
-    for (auto i = std::size_t(0); i < diagram.getNbSites(); ++i)
+    for (const auto& face : diagram.getFaces())
     {
-        auto face = diagram.getFace(i);
-        auto start = face->outerComponent;
+        auto start = face.outerComponent;
         auto halfEdge = start;
         do
         {
             halfEdge = halfEdge->next;
             if (halfEdge == nullptr)
             {
-                std::cerr << "Face " << i << " is not bounded.\n";
+                std::cerr << "Face " << face.site->index << " is not bounded.\n";
                 return false;
             }
         } while (halfEdge != start);
@@ -42,7 +41,7 @@ bool isBounded(mygal::Diagram<T>& diagram)
 }
 
 template<typename T>
-bool isIntersectionValid(mygal::Diagram<T>& diagram, const mygal::Box<T>& box)
+bool isIntersectionValid(const mygal::Diagram<T>& diagram, const mygal::Box<T>& box)
 {
     for (const auto& vertex : diagram.getVertices())
     {
