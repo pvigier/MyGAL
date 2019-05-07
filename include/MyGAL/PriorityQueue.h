@@ -17,7 +17,7 @@
 #pragma once
 
 // STL
-#include <iosfwd>
+#include <ostream> // Maybe make it optional
 #include <vector>
 #include <memory>
 
