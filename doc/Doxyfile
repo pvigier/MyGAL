@@ -877,7 +877,8 @@ RECURSIVE              = YES
 EXCLUDE                = ../include/MyGAL/Arc.h \
                          ../include/MyGAL/Beachline.h \
                          ../include/MyGAL/Event.h \
-                         ../include/MyGAL/PriorityQueue.h
+                         ../include/MyGAL/PriorityQueue.h \
+                         ../include/MyGAL/util.h
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
