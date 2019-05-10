@@ -34,7 +34,7 @@ To get started, you just have to add the `include` folder of MyGAL to the includ
 To use the Fortune's algorithm to generate a Voronoi diagram, do the following: 
 
 ```cpp
-auto points = std::vector<Vector2<double>>{{0.354, 0.678}, {0.632, 0.189}, {0.842, 942}}; // Generate some points
+auto points = std::vector<Vector2<double>>{{0.354, 0.678}, {0.632, 0.189}, {0.842, 0.942}}; // Generate some points
 auto algorithm = FortuneAlgorithm<double>(points); // Initialize an instance of Fortune's algorithm
 algorithm.construct(); // Construct the diagram
 ```
@@ -76,6 +76,8 @@ The controls of the example are:
 ## Known issues
 
 * If several points are aligned horizontally (exactly the same y-coordinate), the diagram may be incorrect.
+* At least two points are expected.
+* The algorithms are tuned to work with coordinates between 0 and 1. You may want to scale your data to obtain better results.
 
 ## Documentation
 
