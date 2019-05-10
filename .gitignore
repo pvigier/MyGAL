@@ -44,7 +44,7 @@ build
 # Documentation
 doc/*
 !doc/Doxyfile
-!goc/mainpage.h
+!doc/mainpage.h
 
 # Visual Studio Code
 .vscode/
