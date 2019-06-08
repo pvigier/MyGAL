@@ -54,7 +54,7 @@ public:
         return top;
     }
 
-    void push(std::unique_ptr<T> elem)
+    void push(std::unique_ptr<T>&& elem)
     {
         elem->index = mElements.size();
         mElements.emplace_back(std::move(elem));
@@ -141,9 +141,7 @@ private:
 
     inline void swap(std::size_t i, std::size_t j)
     {
-        auto tmp = std::move(mElements[i]);
-        mElements[i] = std::move(mElements[j]);
-        mElements[j] = std::move(tmp);
+        std::swap(mElements[i], mElements[j]);
         mElements[i]->index = i;
         mElements[j]->index = j;
     }
