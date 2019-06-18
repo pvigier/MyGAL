@@ -21,22 +21,24 @@
 
 namespace mygal
 {
-
 template<typename T>
-constexpr T EPSILON = std::numeric_limits<T>::epsilon();
+T EPSILON ()
+{
+  return std::numeric_limits<T>::epsilon ();
+}
 
 // Almost predicates are easier to satisfy than the normal ones
 
 template<typename T>
-constexpr bool almostLower(T lhs, T rhs) noexcept
+bool almostLower(T lhs, T rhs)
 {
-    return lhs <= rhs + EPSILON<T>;
+    return lhs <= rhs + EPSILON<T>();
 }
 
 template<typename T>
-constexpr bool almostGreater(T lhs, T rhs) noexcept
+bool almostGreater(T lhs, T rhs)
 {
-    return lhs >= rhs - EPSILON<T>;
+    return lhs >= rhs - EPSILON<T>();
 }
 
 template<typename T>
@@ -62,13 +64,13 @@ constexpr bool almostBetween(T x, T a, T b) noexcept
 template<typename T>
 constexpr bool strictlyLower(T lhs, T rhs) noexcept
 {
-    return lhs < rhs - EPSILON<T>;
+    return lhs < rhs - EPSILON<T>();
 }
 
 template<typename T>
 constexpr bool strictlyGreater(T lhs, T rhs) noexcept
 {
-    return lhs > rhs + EPSILON<T>;
+    return lhs > rhs + EPSILON<T>();
 }
 
 template<typename T>
