@@ -65,7 +65,7 @@ public:
     {
         // Initialize event queue
         for (auto i = std::size_t(0); i < mDiagram.getNbSites(); ++i)
-            mEvents.push(std::make_unique<Event<T>>(mDiagram.getSite(i)));
+            mEvents.push(std::unique_ptr<Event<T>>(new Event<T>(mDiagram.getSite(i))));
 
         // Process events
         while (!mEvents.isEmpty())
@@ -301,7 +301,7 @@ private:
             ((rightBreakpointMovingRight && almostLower(rightInitialX, convergencePoint.x)) ||
             (!rightBreakpointMovingRight && almostGreater(rightInitialX, convergencePoint.x))))
         {
-            auto event = std::make_unique<Event<T>>(y, convergencePoint, middle);
+            auto event = std::unique_ptr<Event<T>>(new Event<T>(y, convergencePoint, middle));
             middle->event = event.get();
             mEvents.push(std::move(event));
         }
