@@ -56,7 +56,7 @@ public:
      * \param x x-coordinate
      * \param y y-coordinate
      */
-    Vector2<T>(T x = 0.0, T y = 0.0) : x(x), y(y)
+    Vector2(T x = 0.0, T y = 0.0) : x(x), y(y)
     {
 
     }
