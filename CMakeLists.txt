@@ -47,7 +47,7 @@ write_basic_package_version_file(
     VERSION 
     COMPATIBILITY AnyNewerVersion)
 configure_package_config_file(
-    ${CMAKE_SOURCE_DIR}/cmake/MyGALConfig.cmake.in
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/MyGALConfig.cmake.in
     ${CMAKE_BINARY_DIR}/MyGALConfig.cmake
     INSTALL_DESTINATION lib/cmake/MyGAL)
 
