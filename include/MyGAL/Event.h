@@ -28,7 +28,7 @@ namespace mygal
 {
 
 template<typename T>
-class Arc;
+struct Arc;
 
 template<typename T>
 class Event
